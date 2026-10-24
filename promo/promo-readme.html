@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TockMux README film</title>
+<meta name="html2mp4:duration" content="20">
+<meta name="html2mp4:width" content="1280">
+<meta name="html2mp4:height" content="720">
+<style>
+  :root { --paper:#F4EFE3; --ink:#161514; --mustard:#E3B95C; --rose:#E59A8A; --sage:#A9C5A0; --slate:#9DB2CC; --lilac:#C9BEDD; --white:#FFFDF7; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .abs { position: absolute; }
+  .display { font-family: "Arial Black", Arial, sans-serif; text-transform: uppercase; letter-spacing: -2px; word-spacing: -8px; line-height: 1; white-space: nowrap; }
+  .letters span { display: inline-block; opacity: 0; }
+  .tag { position: absolute; left: 90px; top: 70px; border: 5px solid var(--ink); background: var(--white); box-shadow: 8px 8px 0 var(--ink); padding: 8px 18px; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+  .card { position: absolute; border: 5px solid var(--ink); background: var(--white); box-shadow: 12px 12px 0 var(--ink); }
+  .mono { font-family: "Courier New", Consolas, monospace; font-weight: 700; }
+  .wipe { position: absolute; inset: 0; background: var(--ink); transform: translateX(-100%); }
+  .bar-top { position: absolute; left: 0; top: 0; right: 0; height: 56px; background: var(--ink); color: var(--paper); display: flex; align-items: center; gap: 10px; padding: 0 22px; }
+  .bar-top i { width: 14px; height: 14px; border: 3px solid var(--paper); border-radius: 50%; display: inline-block; }
+  .ball { position: absolute; width: 60px; height: 60px; border-radius: 50%; background: var(--rose); border: 4px solid var(--ink); }
+  .film { position: absolute; border: 5px solid var(--ink); background: var(--ink); box-shadow: 12px 12px 0 var(--ink); }
+  .frame { position: absolute; width: 150px; height: 90px; border: 4px solid var(--paper); }
+  .fc { position: absolute; right: 90px; bottom: 60px; font-size: 40px; font-weight: 800; border: 5px solid var(--ink); background: var(--white); box-shadow: 8px 8px 0 var(--ink); padding: 8px 20px; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- Scene 1 (0 to 3.5 s): the promise -->
+  <div class="scene" id="s1" style="background: var(--paper)">
+    <div class="tag">HTML to video</div>
+    <div class="abs display letters" id="l1" style="left: 90px; top: 250px; font-size: 118px;"></div>
+    <div class="abs display letters" id="l1b" style="left: 90px; top: 400px; font-size: 118px;"></div>
+  </div>
+
+  <!-- Scene 2 (3.5 to 8 s): the page that moves by itself -->
+  <div class="scene" id="s2" style="background: var(--sage)">
+    <div class="card" id="win" style="left: 90px; top: 150px; width: 780px; height: 470px; background: var(--white); overflow: hidden;">
+      <div class="bar-top" style="position: absolute; left: 0; top: 0; width: 100%; height: 50px;"><i></i><i></i><i></i></div>
+      <div class="abs" id="arena" style="left: 0; top: 50px; width: 770px; height: 414px; background: var(--paper);">
+        <div class="ball" id="ball"></div>
+        <div class="abs mono" style="left: 26px; top: 20px; font-size: 22px;">your-page.html</div>
+      </div>
+    </div>
+    <div class="abs display letters" id="l2" style="left: 900px; top: 250px; font-size: 60px;"></div>
+    <div class="abs display letters" id="l2b" style="left: 900px; top: 335px; font-size: 60px;"></div>
+    <div class="abs mono" id="sub2" style="left: 900px; top: 450px; font-size: 26px; opacity: 0; width: 320px; line-height: 1.4;">It already moves on its own.</div>
+  </div>
+
+  <!-- Scene 3 (8 to 12 s): the clock -->
+  <div class="scene" id="s3" style="background: var(--slate)">
+    <div class="tag">TockMux</div>
+    <div class="abs display letters" id="l3" style="left: 90px; top: 220px; font-size: 112px;"></div>
+    <div class="abs display letters" id="l3b" style="left: 90px; top: 370px; font-size: 112px;"></div>
+    <div class="abs mono" id="sub3" style="left: 90px; top: 540px; font-size: 30px; opacity: 0;">It takes the clock. One frame at a time.</div>
+    <div class="fc mono" id="fc">FRAME 000</div>
+  </div>
+
+  <!-- Scene 4 (12 to 16 s): the film strip -->
+  <div class="scene" id="s4" style="background: var(--lilac)">
+    <div class="film" id="film" style="left: 90px; top: 200px; width: 1100px; height: 300px;">
+      <div class="frame" id="f1" style="left: 26px; top: 80px; background: var(--mustard);"></div>
+      <div class="frame" id="f2" style="left: 206px; top: 80px; background: var(--rose);"></div>
+      <div class="frame" id="f3" style="left: 386px; top: 80px; background: var(--sage);"></div>
+      <div class="frame" id="f4" style="left: 566px; top: 80px; background: var(--slate);"></div>
+      <div class="frame" id="f5" style="left: 746px; top: 80px; background: var(--white);"></div>
+    </div>
+    <div class="abs display" id="done" style="left: 90px; top: 560px; font-size: 86px; opacity: 0;">promo.mp4 ✓</div>
+  </div>
+
+  <!-- Scene 5 (16 to 20 s): install and logo -->
+  <div class="scene" id="s5" style="background: var(--ink); color: var(--paper)">
+    <div class="abs" id="logo" style="left: 90px; top: 130px; width: 180px; height: 180px; background: var(--mustard); border: 8px solid var(--paper); box-shadow: 12px 12px 0 var(--rose);"></div>
+    <div class="abs display letters" id="l5" style="left: 300px; top: 150px; font-size: 150px; color: var(--paper);"></div>
+    <div class="abs mono" id="tag5" style="left: 90px; top: 380px; font-size: 34px; opacity: 0; color: var(--paper);">Your HTML animation, as a real MP4.</div>
+    <div class="card mono" id="inst" style="left: 90px; top: 480px; width: 900px; height: 110px; background: var(--white); color: var(--ink); font-size: 40px; padding: 26px 34px; opacity: 0; box-shadow: 12px 12px 0 var(--rose);"></div>
+  </div>
+
+  <div class="wipe" id="wipe"></div>
+</div>
+
+<script>
+  // Timeline engine: every value is a function of page time t (seconds).
+  // TockMux advances requestAnimationFrame one frame at a time, so the film is the same on every render.
+  const $ = (id) => document.getElementById(id);
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+
+  function splitLetters(id, text) {
+    const el = $(id);
+    el.innerHTML = [...text].map((ch) => "<span>" + (ch === " " ? "&nbsp;" : ch) + "</span>").join("");
+    return [...el.querySelectorAll("span")];
+  }
+  const L = {
+    l1: splitLetters("l1", "Your page"),
+    l1b: splitLetters("l1b", "is an animation."),
+    l2: splitLetters("l2", "It moves"),
+    l2b: splitLetters("l2b", "by itself."),
+    l3: splitLetters("l3", "TockMux"),
+    l3b: splitLetters("l3b", "owns the clock."),
+    l5: splitLetters("l5", "TockMux")
+  };
+  const INSTALL = "npm install -g tockmux";
+
+  function letters(spans, t, t0, t1) {
+    const step = (t1 - t0) / spans.length;
+    spans.forEach((s, i) => {
+      const p = easeOut(seg(t, t0 + i * step, t0 + i * step + 0.35));
+      s.style.opacity = p;
+      s.style.transform = "translateY(" + ((1 - p) * 40) + "px)";
+    });
+  }
+  function fade(el, t, a, b, len = 0.4) {
+    const inP = easeOut(seg(t, a, a + len));
+    const outP = t > b ? 1 - seg(t, b, b + len) : 1;
+    el.style.opacity = Math.min(inP, outP);
+  }
+  function sceneOn(id, t, a, b) {
+    $(id).style.opacity = t >= a && t < b ? 1 : 0;
+  }
+
+  const WIPES = [[3.1, 3.7], [7.6, 8.2], [11.6, 12.2], [15.6, 16.2]];
+  function wipe(t) {
+    let x = -100;
+    for (const [a, b] of WIPES) {
+      if (t >= a && t < b) {
+        const p = seg(t, a, b);
+        x = p < 0.5 ? -100 + easeInOut(p * 2) * 100 : easeInOut((p - 0.5) * 2) * -100;
+      }
+    }
+    $("wipe").style.transform = "translateX(" + x + "%)";
+  }
+
+  function render(t) {
+    sceneOn("s1", t, 0, 3.4);
+    sceneOn("s2", t, 3.4, 7.8);
+    sceneOn("s3", t, 7.8, 11.8);
+    sceneOn("s4", t, 11.8, 15.8);
+    sceneOn("s5", t, 15.8, 21);
+
+    // scene 1
+    letters(L.l1, t, 0.2, 1.2);
+    letters(L.l1b, t, 1.1, 2.6);
+
+    // scene 2: the page bounces on its own, in its own window
+    const p = (t - 3.4) % 1.6 / 1.6;
+    const bounce = Math.abs(Math.sin(p * Math.PI));
+    const ballX = 40 + (t - 3.4) * 90 % 640;
+    $("ball").style.left = ballX + "px";
+    $("ball").style.top = (300 - bounce * 230) + "px";
+    letters(L.l2, t, 4.0, 5.0);
+    letters(L.l2b, t, 4.6, 5.8);
+    fade($("sub2"), t, 6.0, 99);
+
+    // scene 3: the clock and a frame counter
+    letters(L.l3, t, 8.1, 9.0);
+    letters(L.l3b, t, 8.8, 10.2);
+    fade($("sub3"), t, 10.3, 99);
+    $("fc").textContent = "FRAME " + String(Math.max(0, Math.floor((t - 7.8) * 30))).padStart(3, "0");
+
+    // scene 4: frames drop into the film strip, then "promo.mp4" appears
+    ["f1", "f2", "f3", "f4", "f5"].forEach((id, i) => {
+      const at = 12.0 + i * 0.18;
+      const q = easeOut(seg(t, at, at + 0.4));
+      $(id).style.opacity = q;
+      $(id).style.transform = "translateY(" + ((1 - q) * 60) + "px)";
+    });
+    fade($("done"), t, 14.8, 99, 0.4);
+
+    // scene 5: logo, tagline and the install line types out
+    const lg = easeOut(seg(t, 16.0, 16.5));
+    $("logo").style.transform = "rotate(" + ((1 - lg) * 90) + "deg) scale(" + lg + ")";
+    letters(L.l5, t, 16.2, 17.0);
+    fade($("tag5"), t, 17.4, 99);
+    $("inst").style.opacity = t >= 18.0 ? 1 : 0;
+    const k = Math.floor(clamp((t - 18.2) / 1.5) * INSTALL.length);
+    $("inst").textContent = "$ " + INSTALL.slice(0, k) + (t < 19.7 ? "_" : "");
+
+    wipe(t);
+  }
+
+  let t0 = null;
+  function loop(now) {
+    if (t0 === null) t0 = now;
+    render((now - t0) / 1000);
+    requestAnimationFrame(loop);
+  }
+  render(0);
+  requestAnimationFrame(loop);
+</script>
+</body>
+</html>

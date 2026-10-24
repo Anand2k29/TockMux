@@ -3,11 +3,11 @@
 <p align="center"><b>Turn any self-playing HTML animation into a frame-perfect MP4, GIF or WebM.</b></p>
 
 <p align="center">
-  <img src="promo/tockmux-launch.gif" alt="TockMux 30-second launch film, made by TockMux" width="640">
+  <img src="promo/tockmux-readme.gif" alt="TockMux film, made by TockMux" width="640">
 </p>
 
 <p align="center">
-  <a href="https://github.com/Anand2k29/TockMux/blob/main/promo/tockmux-launch.mp4"><b>Watch the full 30-second launch film (MP4)</b></a><br>
+  <a href="https://github.com/Anand2k29/TockMux/blob/main/promo/tockmux-readme.mp4"><b>Watch the full 20-second film (MP4)</b></a><br>
   <a href="#quick-start">Quick start</a> ·
   <a href="#use-the-numbered-menu">Numbered menu</a> ·
   <a href="docs/">Guides</a> ·
