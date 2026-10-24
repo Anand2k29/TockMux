@@ -1,11 +1,13 @@
-# TockMux
+<h1 align="center">TockMux</h1>
 
-**Turn any self-playing HTML animation into a frame-perfect MP4, GIF or WebM.**
-
-![TockMux launch film, made by TockMux](promo/tockmux-launch.gif)
+<p align="center"><b>Turn any self-playing HTML animation into a frame-perfect MP4, GIF or WebM.</b></p>
 
 <p align="center">
-  <a href="promo/tockmux-launch.mp4"><b>Watch the 30-second launch film</b></a> ·
+  <img src="promo/tockmux-launch.gif" alt="TockMux 30-second launch film, made by TockMux" width="640">
+</p>
+
+<p align="center">
+  <a href="https://github.com/Anand2k29/TockMux/blob/main/promo/tockmux-launch.mp4"><b>Watch the full 30-second launch film (MP4)</b></a><br>
   <a href="#quick-start">Quick start</a> ·
   <a href="#use-the-numbered-menu">Numbered menu</a> ·
   <a href="docs/">Guides</a> ·
