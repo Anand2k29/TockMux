@@ -1,0 +1,62 @@
+{
+  "name": "tockmux",
+  "version": "4.0.0",
+  "description": "Turn any self-playing HTML animation into a frame-perfect MP4, GIF or WebM. Deterministic virtual clock, voice-over sync, drag-and-drop Studio and an MCP server for AI agents.",
+  "type": "module",
+  "bin": {
+    "tockmux": "bin/tockmux.js",
+    "tmx": "bin/tockmux.js"
+  },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "studio",
+    "site",
+    "examples",
+    "templates",
+    "docs",
+    "scripts/postinstall.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.js",
+    "test:fast": "node scripts/run-tests.js --fast",
+    "studio": "node bin/tockmux.js studio",
+    "demo": "node bin/tockmux.js demo",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "keywords": [
+    "html-to-mp4",
+    "html-to-video",
+    "video-as-code",
+    "headless-chrome",
+    "playwright",
+    "ffmpeg",
+    "mcp",
+    "model-context-protocol",
+    "elevenlabs",
+    "voiceover",
+    "claude",
+    "animation",
+    "tmx"
+  ],
+  "author": "Spidey_Moon (Discord) / Anand2k29 (GitHub)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "playwright-core": "^1.48.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0"
+  }
+}

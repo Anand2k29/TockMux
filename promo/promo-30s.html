@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TockMux 30-second promo</title>
+<meta name="html2mp4:duration" content="30">
+<meta name="html2mp4:width" content="1280">
+<meta name="html2mp4:height" content="720">
+<style>
+  :root { --paper:#F4EFE3; --ink:#161514; --mustard:#E3B95C; --rose:#E59A8A; --sage:#A9C5A0; --slate:#9DB2CC; --lilac:#C9BEDD; --white:#FFFDF7; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+  /* five scenes, six seconds each, on a 30 s film */
+  .scene { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 0 110px; opacity: 0; animation: show 30s linear both; }
+  .s1 { animation-delay: 0s; background: var(--paper); }
+  .s2 { animation-delay: 6s; background: var(--slate); }
+  .s3 { animation-delay: 12s; background: var(--paper); }
+  .s4 { animation-delay: 18s; background: var(--sage); }
+  .s5 { animation-delay: 24s; background: var(--mustard); }
+  @keyframes show { 0% { opacity: 0; } 0.3% { opacity: 1; } 19.7% { opacity: 1; } 20% { opacity: 0; } 100% { opacity: 0; } }
+  .title { font-family: "Arial Black", Arial, sans-serif; font-size: 104px; line-height: 1; text-transform: uppercase; letter-spacing: -2px; word-spacing: -8px; }
+  .sub { font-size: 34px; margin-top: 28px; font-weight: 700; }
+  .tag { display: inline-block; align-self: flex-start; border: 4px solid var(--ink); background: var(--white); box-shadow: 6px 6px 0 var(--ink); padding: 8px 18px; font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 36px; }
+  .box { align-self: flex-start; border: 4px solid var(--ink); background: var(--white); box-shadow: 10px 10px 0 var(--ink); padding: 18px 26px; margin-top: 40px; font-family: "Courier New", monospace; font-size: 34px; font-weight: 700; }
+  .block { position: absolute; width: 200px; height: 200px; right: 130px; top: 260px; border: 4px solid var(--ink); box-shadow: 12px 12px 0 var(--ink); background: var(--rose); animation: spin 6s linear infinite; }
+  .row { display: flex; gap: 28px; margin-top: 40px; }
+  .chip { border: 4px solid var(--ink); background: var(--white); box-shadow: 8px 8px 0 var(--ink); padding: 22px 26px; font-size: 30px; font-weight: 800; }
+  .frame-bar { position: absolute; left: 110px; right: 110px; bottom: 56px; height: 26px; border: 4px solid var(--ink); background: var(--white); }
+  .frame-bar div { height: 100%; background: var(--rose); width: 0; animation: fill 30s linear infinite; }
+  .big { font-family: "Arial Black", Arial, sans-serif; font-size: 150px; line-height: 1; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes fill { from { width: 0; } to { width: 100%; } }
+</style>
+</head>
+<body>
+
+<!-- 0 to 6 s: the problem -->
+<div class="scene s1">
+  <div class="tag">The problem</div>
+  <div class="title">Your animation<br>is a web page.</div>
+  <div class="sub">Not a video you can post on TikTok.</div>
+</div>
+
+<!-- 6 to 12 s: the screen recorder -->
+<div class="scene s2">
+  <div class="tag">Screen recording</div>
+  <div class="title">Different every<br>single time.</div>
+  <div class="sub">It stutters when the computer is busy.</div>
+</div>
+
+<!-- 12 to 18 s: the clock -->
+<div class="scene s3">
+  <div class="tag">TockMux</div>
+  <div class="title">It takes control<br>of the clock.</div>
+  <div class="sub">One frame at a time. The same video on every run.</div>
+  <div class="block"></div>
+</div>
+
+<!-- 18 to 24 s: what you get -->
+<div class="scene s4">
+  <div class="tag">Built for every workflow</div>
+  <div class="title">Watch. Voice.<br>Share.</div>
+  <div class="row">
+    <div class="chip">Save = re-render</div>
+    <div class="chip">Narration fits</div>
+    <div class="chip">Works with AI</div>
+  </div>
+</div>
+
+<!-- 24 to 30 s: call to action -->
+<div class="scene s5">
+  <div class="tag">Free and open source</div>
+  <div class="title">TockMux</div>
+  <div class="sub">Your HTML animation, as a real MP4.</div>
+  <div class="box">npm install -g tockmux</div>
+</div>
+
+<div class="frame-bar"><div></div></div>
+
+</body>
+</html>

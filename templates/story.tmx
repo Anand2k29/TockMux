@@ -1,0 +1,20 @@
+# Edit me, then run:  tockmux render story.tmx
+film "My first film" duration=9s preset=youtube theme=midnight
+watermark "yourname"
+
+scene 0s..3s transition=pop {
+  badge "Hello"
+  title "This is my first TockMux video" highlight="first"
+  subtitle "Change the words, then render again."
+}
+
+scene 3s..6s transition=slide {
+  title "Lists work too"
+  list "Write a few lines" "Run tockmux render" "Share your MP4"
+}
+
+scene 6s..9s transition=zoom {
+  counter from=0 to=100 suffix="% done"
+  bar percent=100
+  caption "Made with TockMux"
+}

@@ -1,0 +1,214 @@
+TOCKMUX MVP: FUNCTION MAP
+==========================
+
+How each function talks to the others. Read top to bottom: a door calls the pipeline,
+the pipeline calls settings and the renderer, the renderer calls the browser and FFmpeg.
+
+Notation:
+  A -> B       A calls B
+  A (returns X) what A hands back
+  [hook]       a callback A is given, so it can report progress without knowing about the screen
+
+------------------------------------------------------------------
+1. FRONT DOORS (how a request gets in)
+------------------------------------------------------------------
+
+bin/tockmux.js
+  -> src/cli/main.js  main(argv)
+       parses the command name, finds it in COMMANDS, then calls its run()
+       on an error: prints the message and hint (no stack trace unless --debug)
+
+src/cli/args.js  parseArgs(argv, spec)
+  -> returns { flags, positional, errors }
+     used by every command. Unknown flags get a "did you mean" suggestion.
+
+src/cli/commands/render.js  renderCommand.run({ positional, flags, ui })
+  -> ensureBrowser(ui, flags)            makes sure Chromium exists (may download it once)
+  -> ui.progress("Rendering")            returns { update(p), done() }   (animated bar)
+  -> ui.spinner("Reading ...")           returns { succeed(), fail() }   (animated spinner)
+  -> convert({ input, flags, hooks })    the main call (section 2)
+       hooks.onPlan    -> prints the summary table (size, length, voice, output)
+       hooks.onProgress-> bar.update(p)  every frame batch
+       hooks.onLog     -> dim text (only when not a TTY)
+       hooks.onVoiceEvent -> warns when an ElevenLabs account is switched
+  -> ui.box(...)                          prints "Video ready" with size and time
+
+src/cli/commands/watch.js  watchCommand.run({ positional, flags, ui })     [NEW]
+  -> ensureBrowser(ui, flags)
+  -> fs.watch(file, onChange)             the operating system tells us about saves
+  -> onChange()                           clears the timer and sets a 300 ms timer
+  -> build()                              runs when the timer fires
+       busy?  -> mark queued = true, return
+       else   -> convert({ input, flags })   same call as render
+              -> ui.success(path, time)     or ui.error(message, hint) and keep going
+              -> when done, if queued, build() once more
+  -> waits for SIGINT / SIGTERM; then closes the watcher
+
+src/cli/commands/batch (inside render.js)  batchCommand.run
+  -> expandInputs(positional)              turns folders and wildcards into a file list
+  -> convert() once per file               with its own progress bar
+
+src/cli/commands/tools.js
+  setupCommand.run    -> installBrowser()
+  doctorCommand.run   -> findBrowser(), resolveFfmpeg(), checks Node version
+  initCommand.run     -> writes templates/ to a new folder
+  demoCommand.run     -> convert() on examples/promo.html, prints the path
+  studioCommand.run   -> startStudio()     (src/studio/server.js)
+  mcpCommand.run      -> runMcpServer()    (src/mcp/server.js)
+  aboutCommand.run    -> prints VERSION, DISCORD, GITHUB  (src/version.js)
+
+src/mcp/server.js  runMcpServer({ root, input, output })
+  -> createMcpHandler({ root })            answers JSON-RPC messages
+       tools/call "render_video"  -> convert({ input: resolved path inside root })
+       tools/call "check_html"    -> checkInput({ input, live: true })
+       tools/call "snapshot_frame"-> snapshot({ input, atSec })
+       tools/call "compile_tmx"   -> parseTmx() then compileTmxToHtml()
+       tools/call "list_presets"  -> PRESETS
+       tools/call "probe_media"   -> probeMedia()
+       tools/call "speak_text"    -> VoicePool.synthesize()
+  Every path is checked to stay inside `root` (no path traversal).
+
+src/studio/server.js  startStudio({ port, host })
+  -> HTTP on 127.0.0.1 only (rejects other Host headers)
+  -> POST /jobs  -> JobQueue.add()   (src/studio/jobs.js)
+       JobQueue runs one job at a time (maxJobs = 1) by calling convert()
+  -> GET /api/info -> { version, discord, presets, themes, browserReady, cpus }
+
+src/index.js  (library)
+  export { convert, checkInput, snapshot, planJob, PRESETS, ... }
+  A developer's script calls convert({ input, flags }) directly.
+
+------------------------------------------------------------------
+2. THE PIPELINE (the heart of the product)
+------------------------------------------------------------------
+
+src/core/pipeline.js  convert({ input, text, kind, name, baseDir, flags, hooks })
+  -> planJob({ input, flags })                       (section 2a)
+  -> inferFormat(flags, flags.output)               picks mp4, webm or gif
+  -> decides the output path (next to the input, or flags.output)
+  -> if a voice is needed and none given:  VoicePool.synthesize(...)   (section 4)
+  -> if flags.autoFit and a voice exists:
+       probeMedia(voice) -> the voice length
+       stretches settings.duration and sets timeScale   (the animation follows the voice)
+  -> hooks.onPlan(...)                                (tells the screen the plan)
+  -> renderVideo({ source, settings, output, format, timeScale, seed, voice, music, ... })
+  -> returns { output, durationSec, width, height, fps, bytes, elapsedSec, warnings, ... }
+
+src/core/pipeline.js  checkInput({ input, live })
+  -> planJob()  then runPreflight({ settings, htmlInfo, live, voice, music })
+  -> returns a list of checks: ok / warn / fail, each with a plain sentence
+
+src/core/pipeline.js  snapshot({ input, atSec, type })
+  -> planJob()  then renderFrame({ source, settings, atSec })
+  -> returns a PNG or JPEG buffer
+
+2a. planJob({ input, text, flags })
+  -> fs.readFileSync(file)                 reads the file
+  -> detectKind(file)                      "html" or "tmx" (src/core/renderer.js)
+  -> tmx:  parseTmx(raw) -> assertValidTmx(ast)     (src/tmx/parser.js)
+  -> html: inspectHtml(raw)                reads <meta html2mp4:*>, CSS durations  (src/core/html-inspect.js)
+  -> resolveSettings({ kind, htmlInfo, tmx, flags, detectedDurationSec })   (src/core/settings.js)
+       order of priority: flag  >  file meta  >  preset  >  detected from CSS  >  default
+  -> prepareSource({ file, kind, tmx, html, root })  (src/core/renderer.js)
+       for .tmx: compileTmxToHtml(ast) first     (src/tmx/compiler.js)
+       starts a static server for the folder     (src/core/static-server.js)
+  -> returns { file, label, kind, settings, source, music, voice, tts, ... }
+
+------------------------------------------------------------------
+3. THE RENDERER (where time is controlled)
+------------------------------------------------------------------
+
+src/core/renderer.js  renderVideo(opts)
+  -> planSegments(fromFrame, toFrame, workers)      splits frames into equal parts
+  -> for each segment, in parallel (workers):
+       launchBrowser()                             src/core/browser.js
+       open a page, inject buildClockScript({ seed })   src/core/clock-script.js
+       goto the page (served by startStaticServer)
+       for each frame:
+         advance the virtual clock by 1/fps
+         let the page react (timers, rAF, CSS animations, videos seeked)
+         capture the frame (DevTools protocol, PNG or JPEG)
+         FrameEncoder.write(buffer)                  src/core/ffmpeg.js
+       FrameEncoder.close()                          ends that segment's file
+  -> concatSegments(segments, listFile, out)         joins segments without re-encoding
+  -> if voice or music: buildMuxArgs({ video, voice, music, duck, voiceOffset })
+  -> if gif: buildGifArgs(); if webm: buildWebmArgs()
+  -> runFfmpeg(args, { onStderr })                  src/core/ffmpeg.js
+  -> hooks.onProgress({ done, total, renderFps, eta, workers }) after each frame batch
+
+src/core/renderer.js  probeLive({ source, settings })
+  -> opens the page once and checks: does it animate? does it load its images? is it cropped?
+  -> used by check and by the MCP check_html tool
+
+src/core/renderer.js  renderFrame({ source, settings, atSec })
+  -> one clock jump to atSec, one capture. Used by frame and snapshot.
+
+src/core/clock-script.js  buildClockScript({ seed, epoch })
+  -> returns JavaScript that is injected before the page loads. It replaces:
+     setTimeout, setInterval, requestAnimationFrame, requestIdleCallback,
+     Date, performance.now(), Math.random (seeded), CSS animation timing,
+     and <video> playback (seeked to the exact time).
+
+src/core/browser.js
+  findBrowser({ browserPath })   -> path to Chrome, Chromium or Edge, or null
+  installBrowser({ onData })     -> downloads Chromium (used by setup and first run)
+  launchBrowser(opts)            -> a Playwright-core browser with the flags from launchArgs()
+  defaultWorkerCount(frames)     -> how many parallel pages to use (1 on a single core)
+
+------------------------------------------------------------------
+4. VOICE (optional)
+------------------------------------------------------------------
+
+src/voice/pool.js  VoicePool.synthesize(text, out, { voiceId })
+  -> splitText(text, 2500)                     long scripts are split at sentence ends
+  -> for each chunk: pick an account from the pool (strategy "fill" uses one account until it runs out, "balance" starts with the most remaining)
+       requestSpeech({ apiKey, text, voiceId })   src/voice/elevenlabs.js
+       on quota or invalid key: classify(status) -> mark that account, switch, emit onEvent("rotate")
+  -> joins chunks into one MP3 (ffmpeg concat demuxer)
+  -> returns { output, chars, chunks, usage }
+
+src/voice/store.js  VoiceStore
+  -> reads and writes ~/.tockmux/voice.json (owner-only, mode 0600)
+  -> maskKey(key) shows only the last characters in the UI
+  -> remaining(account) reads the real usage
+
+src/voice/elevenlabs.js  fetchSubscription(apiKey)   reads the real character count from the API
+
+------------------------------------------------------------------
+5. FFMPEG (the encoder)
+------------------------------------------------------------------
+
+src/core/ffmpeg.js
+  resolveFfmpeg()        uses TOCKMUX_FFMPEG if set, else the bundled ffmpeg-static, else "ffmpeg" on PATH
+  FrameEncoder.start()    starts ffmpeg with image2pipe; frames are written to its stdin; closes on end
+  probeMedia(file)       duration, width, height, audio and video info
+  countFrames(file)      exact frame count (used by probe --frames)
+  concatSegments(...)    joins segments with the concat demuxer (no re-encode)
+  buildMuxArgs(...)      adds voice and music, with optional ducking under speech
+  buildGifArgs / buildWebmArgs   format-specific flags
+
+------------------------------------------------------------------
+6. ERRORS AND OUTPUT (how people see problems)
+------------------------------------------------------------------
+
+src/errors.js  TockError(message, { hint, code, exitCode })
+  Every expected problem is a TockError with a hint. main.js prints the message and the hint.
+  Anything else is "Something unexpected went wrong" plus a suggestion to run with --debug.
+
+src/tmx/parser.js  parseTmx(text) and assertValidTmx(ast)
+  line numbers in every error, and didYouMean(word, options) for typos.
+
+src/cli/ui.js  createUI({ json, quiet, noColor })
+  banner, step, success, warn, error(title, hint), kv, box, progress, spinner, confirm
+  colour only in a real terminal with colour support. JSON output with --json.
+
+------------------------------------------------------------------
+7. WHAT CALLS WHAT, IN ONE LINE EACH
+------------------------------------------------------------------
+
+render, watch, batch, mcp render_video, studio job, library convert  ->  convert()
+convert()   ->  planJob()  ->  resolveSettings(), prepareSource()  ->  renderVideo()
+renderVideo ->  buildClockScript(), launchBrowser(), FrameEncoder, runFfmpeg(), concatSegments()
+check       ->  checkInput()  ->  planJob(), runPreflight(), probeLive()
+frame       ->  snapshot()    ->  planJob(), renderFrame()
+voice       ->  VoicePool     ->  requestSpeech(), VoiceStore, classify()

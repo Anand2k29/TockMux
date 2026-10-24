@@ -1,0 +1,22 @@
+# TockMux demo film. Run:  tockmux demo
+film "TockMux demo" duration=6s preset=youtube theme=midnight
+watermark "tockmux"
+
+scene 0s..2s transition=pop {
+  badge "Frame-perfect video from code"
+  title "Your HTML animation, as an MP4" highlight="as an MP4"
+  subtitle "Every frame is drawn at an exact moment, so it looks the same on any computer."
+}
+
+scene 2s..4s transition=slide {
+  badge "Three steps"
+  title "Install. Check. Render."
+  list "npm install -g tockmux" "tockmux check promo.html" "tockmux render promo.html"
+}
+
+scene 4s..6s transition=zoom {
+  badge "Works with GSAP, CSS, canvas and SVG"
+  counter from=0 to=100 suffix="% deterministic"
+  bar percent=100
+  caption "No screen recorder. No dropped frames."
+}

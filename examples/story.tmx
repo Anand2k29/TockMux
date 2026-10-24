@@ -1,0 +1,20 @@
+# A vertical story for TikTok / Reels / Shorts.
+film "Launch story" preset=tiktok theme=sunset
+watermark "@yourbrand"
+
+scene 0s..3s transition=pop {
+  badge "New this week"
+  title "Ship videos like you ship code" highlight="ship code"
+  subtitle "Write it once. Render it anywhere."
+}
+
+scene 3s..6s transition=slide {
+  quote "I rendered forty videos before lunch." by="A very happy developer"
+  caption "Batch mode: tockmux batch ./scenes"
+}
+
+scene 6s..9s transition=fade {
+  title "Try it today"
+  code "npx tockmux demo"
+  caption "Free and open source"
+}

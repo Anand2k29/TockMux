@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TockMux Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238b6bff'/%3E%3Cpath d='M24 18l22 14-22 14z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #0d0e2b; --panel: #151743; --panel2: #1c1e58; --line: rgba(255,255,255,.13);
+    --text: #f4f2ff; --muted: #aaa6d6; --violet: #8b6bff; --pink: #ff6b9a; --amber: #ffc857;
+    --mint: #3ddbb0; --red: #ff6b6b; --sky: #5cc8ff;
+    --sans: "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --mono: "Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; }
+  body { margin: 0; background: radial-gradient(120% 70% at 10% -10%, #25186b 0%, var(--bg) 55%); color: var(--text); font: 15px/1.5 var(--sans); min-height: 100vh; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px clamp(16px, 4vw, 40px); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 20px; letter-spacing: -.02em; }
+  .logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--violet), var(--pink)); display: grid; place-items: center; }
+  .logo svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
+  header a { color: var(--muted); text-decoration: none; font-size: 14px; }
+  header a:hover, header a:focus-visible { color: var(--text); }
+  main { display: grid; grid-template-columns: minmax(300px, 420px) 1fr; gap: 24px; padding: clamp(16px, 4vw, 40px); max-width: 1380px; margin: 0 auto; align-items: start; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+  .card + .card { margin-top: 20px; }
+  h2 { margin: 0 0 14px; font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
+  .tabs { display: inline-flex; background: #0d0e2b99; border: 1px solid var(--line); border-radius: 10px; padding: 3px; margin-bottom: 14px; }
+  .tabs button { background: none; border: 0; color: var(--muted); padding: 6px 14px; border-radius: 8px; cursor: pointer; font: inherit; font-size: 14px; }
+  .tabs button[aria-selected="true"] { background: var(--violet); color: #fff; }
+  #drop { border: 2px dashed #6a62c9; border-radius: 14px; padding: 30px 16px; text-align: center; cursor: pointer; transition: background .15s, border-color .15s; }
+  #drop.over, #drop:focus-visible { background: #8b6bff22; border-color: var(--pink); outline: none; }
+  #drop strong { display: block; font-size: 17px; margin-bottom: 4px; }
+  #drop span { color: var(--muted); font-size: 14px; }
+  textarea { width: 100%; min-height: 190px; background: #0a0b22; color: var(--amber); border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: 13px/1.5 var(--mono); resize: vertical; }
+  .files { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+  .files li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; background: #0d0e2b88; border-radius: 8px; }
+  .files li small { color: var(--muted); }
+  label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+  select, input[type=number], input[type=text], input[type=password] { background: #0a0b22; color: var(--text); border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; font: inherit; width: 100%; }
+  select:focus, input:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--violet); outline-offset: 1px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .check { display: flex; gap: 8px; align-items: center; color: var(--text); font-size: 14px; }
+  .btn { border: 0; border-radius: 11px; padding: 11px 18px; font: inherit; font-weight: 700; cursor: pointer; color: #fff; background: linear-gradient(120deg, var(--violet), var(--pink)); }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); font-weight: 600; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn:not(:disabled):hover { filter: brightness(1.1); }
+  details { margin-top: 14px; }
+  summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+  .stage { background: #0a0b22; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; position: relative; width: 100%; aspect-ratio: 16/9; }
+  .stage iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: #fff; }
+  .stage .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); text-align: center; padding: 20px; }
+  .note { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+  .report { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .report li { display: grid; grid-template-columns: 22px 150px 1fr; gap: 8px; font-size: 14px; }
+  @media (max-width: 560px) { .report li { grid-template-columns: 22px 1fr; } .report li b { grid-column: 2; } .report li span:last-child { grid-column: 2; } }
+  .report .pass { color: var(--mint); } .report .warn { color: var(--amber); } .report .fail { color: var(--red); } .report .info { color: var(--sky); }
+  .report small { display: block; color: var(--muted); }
+  .bar { height: 12px; border-radius: 99px; background: #0a0b22; border: 1px solid var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--violet), var(--pink)); transition: width .15s linear; }
+  .progress-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; margin-top: 8px; }
+  video, .result img { width: 100%; border-radius: 12px; background: #000; max-height: 60vh; object-fit: contain; }
+  .banner { padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; font-size: 14px; }
+  .banner.warn { background: #ffc85722; border: 1px solid #ffc85766; color: var(--amber); }
+  .banner.err { background: #ff6b6b22; border: 1px solid #ff6b6b66; color: var(--red); white-space: pre-wrap; }
+  .accts { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+  .accts li { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 6px 10px; background: #0d0e2b88; border-radius: 8px; }
+  .accts button { background: none; border: 0; color: var(--red); cursor: pointer; font: inherit; }
+  [hidden] { display: none !important; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo"><svg viewBox="0 0 16 16"><path d="M2 1l13 7-13 7z"/></svg></span> TockMux Studio</div>
+  <nav class="row" style="gap:20px"><a href="/landing">About</a><span id="ver" style="color:var(--muted);font-size:13px"></span></nav>
+</header>
+
+<main>
+  <section>
+    <div class="card">
+      <h2>1. Add your animation</h2>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" id="tabDrop">Drop files</button>
+        <button role="tab" aria-selected="false" id="tabPaste">Paste code</button>
+      </div>
+      <div id="paneDrop">
+        <div id="drop" tabindex="0" role="button" aria-label="Choose or drop files">
+          <strong>Drop an .html or .tmx file here</strong>
+          <span>or click to choose. Drop a whole folder to include images and fonts.</span>
+        </div>
+        <input id="fileInput" type="file" multiple hidden>
+        <input id="dirInput" type="file" webkitdirectory hidden>
+        <p class="note"><a href="#" id="pickDir" style="color:var(--sky)">Choose a folder instead</a></p>
+      </div>
+      <div id="panePaste" hidden>
+        <textarea id="code" spellcheck="false" placeholder="Paste HTML or .tmx text here"></textarea>
+        <div class="row" style="margin-top:10px"><button class="btn ghost" id="usePasted">Use this code</button><button class="btn ghost" id="sample">Load a sample</button></div>
+      </div>
+      <ul class="files" id="fileList"></ul>
+      <label id="mainWrap" hidden style="margin-top:12px">Main file<select id="mainSel"></select></label>
+    </div>
+
+    <div class="card">
+      <h2>2. Choose the output</h2>
+      <div class="grid2">
+        <label>Size<select id="preset"><option value="">From the file</option></select></label>
+        <label>Format<select id="format"><option value="mp4">MP4 video</option><option value="gif">GIF</option><option value="webm">WebM</option></select></label>
+        <label>Length (seconds)<input id="duration" type="number" min="1" step="0.5" placeholder="From the file"></label>
+        <label>Frames per second<input id="fps" type="number" min="1" max="120" placeholder="30"></label>
+      </div>
+      <label class="check" style="margin-top:12px"><input type="checkbox" id="fast"> Fast mode (a little lower quality)</label>
+      <details>
+        <summary>Voice-over and music</summary>
+        <div class="grid2" style="margin-top:10px">
+          <label>Voice-over file<select id="voiceSel"><option value="">None</option></select></label>
+          <label>Music file<select id="musicSel"><option value="">None</option></select></label>
+        </div>
+        <label class="check" style="margin-top:10px"><input type="checkbox" id="autoFit" checked> Stretch the animation to match the voice-over</label>
+        <label class="check" style="margin-top:6px"><input type="checkbox" id="duck"> Lower the music while the voice speaks</label>
+        <p class="note">Add audio files by dropping them along with your page.</p>
+      </details>
+      <details>
+        <summary>Page starts with a click?</summary>
+        <label style="margin-top:10px">CSS selector to click at 0s<input id="start" type="text" placeholder="#go"></label>
+      </details>
+      <div class="row" style="margin-top:18px">
+        <button class="btn ghost" id="checkBtn" disabled>Check file</button>
+        <button class="btn" id="renderBtn" disabled>Render video</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ElevenLabs accounts <span style="color:var(--muted);font-weight:400">(optional)</span></h2>
+      <ul class="accts" id="accts"></ul>
+      <div class="grid2">
+        <label>Name<input id="acName" type="text" placeholder="main"></label>
+        <label>API key<input id="acKey" type="password" placeholder="Paste key" autocomplete="off"></label>
+      </div>
+      <div class="row" style="margin-top:10px"><button class="btn ghost" id="acAdd">Add account</button></div>
+      <p class="note">Keys stay on this computer in a private file. Add several and TockMux switches automatically when one runs out.</p>
+    </div>
+  </section>
+
+  <section>
+    <div id="alerts"></div>
+    <div class="card">
+      <h2>Preview</h2>
+      <div class="stage" id="stage"><div class="empty" id="stageEmpty">Your animation appears here after you add a file.</div></div>
+      <p class="note">The preview plays in real time. The final video is drawn frame by frame, so it will be smoother.</p>
+    </div>
+    <div class="card" id="reportCard" hidden><h2>Check results</h2><ul class="report" id="report"></ul></div>
+    <div class="card" id="progCard" hidden>
+      <h2 id="progTitle">Rendering</h2>
+      <div class="bar"><i id="progBar"></i></div>
+      <div class="progress-meta"><span id="progText">Starting...</span><button class="btn ghost" id="cancelBtn" style="padding:4px 12px">Cancel</button></div>
+    </div>
+    <div class="card result" id="resultCard" hidden>
+      <h2>Your video is ready</h2>
+      <div id="player"></div>
+      <p class="note" id="resultMeta"></p>
+      <div class="row" style="margin-top:10px"><a class="btn" id="dl" href="#" download>Download</a></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var state = { files: [], main: null, jobId: null, es: null };
+  var SAMPLE = 'film "My first film" duration=6s preset=youtube theme=midnight\nwatermark "tockmux"\n\nscene 0s..3s transition=pop {\n  badge "Hello"\n  title "This was made in Studio" highlight="Studio"\n  subtitle "Edit the text, then press Render."\n}\n\nscene 3s..6s transition=zoom {\n  counter from=0 to=100 suffix="% done"\n  bar percent=100\n  caption "Made with TockMux"\n}\n';
+
+  function el(tag, props, children) {
+    var n = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (k) { if (k === "text") n.textContent = props[k]; else n.setAttribute(k, props[k]); });
+    (children || []).forEach(function (c) { n.appendChild(c); });
+    return n;
+  }
+  function api(path, opts) {
+    return fetch(path, opts).then(function (r) {
+      return r.json().then(function (j) { if (!r.ok) throw new Error((j.error || "Request failed") + (j.hint ? "\n" + j.hint : "")); return j; });
+    });
+  }
+  function alertBox(kind, msg) {
+    var box = $("alerts"); box.textContent = "";
+    if (msg) box.appendChild(el("div", { class: "banner " + kind, text: msg }));
+  }
+  function fmtBytes(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB"; }
+  function b64(file) {
+    return new Promise(function (res, rej) {
+      var r = new FileReader();
+      r.onload = function () { res(String(r.result).split(",")[1] || ""); };
+      r.onerror = function () { rej(r.error); };
+      r.readAsDataURL(file);
+    });
+  }
+  function textToFile(name, text) { return new File([text], name, { type: "text/plain" }); }
+
+  /* ---------- info ---------- */
+  api("/api/info").then(function (i) {
+    $("ver").textContent = "v" + i.version;
+    Object.keys(i.presets).forEach(function (k) {
+      var p = i.presets[k];
+      $("preset").appendChild(el("option", { value: k, text: k + "  " + p.width + "x" + p.height }));
+    });
+    if (!i.browserReady) alertBox("warn", "Chromium is not installed yet. Close this and run:  tockmux setup  (one time), then reopen Studio.");
+  }).catch(function () {});
+  function loadAccounts() {
+    api("/api/voice").then(function (list) {
+      var ul = $("accts"); ul.textContent = "";
+      if (!list.length) { ul.appendChild(el("li", { text: "No accounts yet." })); return; }
+      list.forEach(function (a) {
+        var info = a.limit ? (a.limit - a.used).toLocaleString() + " characters left" : a.status;
+        var li = el("li", {}, [el("span", { text: a.name + "  " + a.key + "  " + info })]);
+        if (!a.fromEnv) { var b = el("button", { text: "Remove", type: "button" }); b.onclick = function () { api("/api/voice?name=" + encodeURIComponent(a.name), { method: "DELETE" }).then(loadAccounts); }; li.appendChild(b); }
+        ul.appendChild(li);
+      });
+    }).catch(function () {});
+  }
+  loadAccounts();
+  $("acAdd").onclick = function () {
+    var name = $("acName").value.trim(), key = $("acKey").value.trim();
+    if (!name || !key) return alertBox("warn", "Enter a name and an API key.");
+    api("/api/voice", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, key: key }) })
+      .then(function (r) { $("acKey").value = ""; alertBox(r.check && r.check.ok ? "warn" : "warn", r.check && r.check.ok ? "Account added: " + r.check.used.toLocaleString() + " of " + r.check.limit.toLocaleString() + " characters used." : "Account saved, but it could not be verified yet."); loadAccounts(); })
+      .catch(function (e) { alertBox("err", e.message); });
+  };
+
+  /* ---------- tabs ---------- */
+  function tab(which) {
+    $("tabDrop").setAttribute("aria-selected", which === "drop");
+    $("tabPaste").setAttribute("aria-selected", which === "paste");
+    $("paneDrop").hidden = which !== "drop"; $("panePaste").hidden = which !== "paste";
+  }
+  $("tabDrop").onclick = function () { tab("drop"); };
+  $("tabPaste").onclick = function () { tab("paste"); };
+  $("sample").onclick = function () { $("code").value = SAMPLE; };
+  $("usePasted").onclick = function () {
+    var t = $("code").value.trim();
+    if (!t) return alertBox("warn", "Paste some HTML or .tmx text first.");
+    var isTmx = /^\s*(#.*\n)*\s*film\b/i.test(t) || /\bscene\s+[\d.]+s?\.\./.test(t);
+    setFiles([textToFile(isTmx ? "pasted.tmx" : "pasted.html", t)]);
+  };
+
+  /* ---------- file intake ---------- */
+  function readEntries(entry, base) {
+    return new Promise(function (resolve) {
+      if (entry.isFile) { entry.file(function (f) { resolve([{ file: f, name: base + f.name }]); }, function () { resolve([]); }); return; }
+      var reader = entry.createReader(), all = [];
+      (function next() {
+        reader.readEntries(function (batch) {
+          if (!batch.length) { Promise.all(all).then(function (r) { resolve([].concat.apply([], r)); }); return; }
+          batch.forEach(function (e) { all.push(readEntries(e, base + entry.name + "/")); });
+          next();
+        }, function () { resolve([]); });
+      })();
+    });
+  }
+  var drop = $("drop");
+  ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function (e) {
+    var items = e.dataTransfer.items;
+    if (items && items.length && items[0].webkitGetAsEntry) {
+      var jobs = [];
+      for (var i = 0; i < items.length; i++) { var en = items[i].webkitGetAsEntry(); if (en) jobs.push(readEntries(en, "")); }
+      Promise.all(jobs).then(function (r) { setEntries([].concat.apply([], r)); });
+    } else setFiles(Array.prototype.slice.call(e.dataTransfer.files));
+  });
+  drop.onclick = function () { $("fileInput").click(); };
+  drop.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("fileInput").click(); } };
+  $("pickDir").onclick = function (e) { e.preventDefault(); $("dirInput").click(); };
+  $("fileInput").onchange = function () { setFiles(Array.prototype.slice.call(this.files)); };
+  $("dirInput").onchange = function () {
+    setEntries(Array.prototype.slice.call(this.files).map(function (f) { return { file: f, name: f.webkitRelativePath || f.name }; }));
+  };
+  function setFiles(list) { setEntries(list.map(function (f) { return { file: f, name: f.name }; })); }
+  function setEntries(entries) {
+    entries = entries.filter(function (e) { return !/(^|\/)(node_modules|\.git)\//.test(e.name); });
+    // drop a single common top folder so the main file sits at the root
+    var tops = entries.map(function (e) { return e.name.split("/")[0]; });
+    if (entries.length && entries.every(function (e) { return e.name.indexOf("/") > -1; }) && tops.every(function (t) { return t === tops[0]; })) entries.forEach(function (e) { e.name = e.name.split("/").slice(1).join("/"); });
+    state.files = entries;
+    var mains = entries.filter(function (e) { return /\.(html?|tmx)$/i.test(e.name); });
+    state.main = mains.length ? (mains.filter(function (e) { return e.name.indexOf("/") < 0; })[0] || mains[0]).name : null;
+    refreshUI();
+  }
+
+  function refreshUI() {
+    var ul = $("fileList"); ul.textContent = "";
+    state.files.slice(0, 40).forEach(function (e) { ul.appendChild(el("li", {}, [el("span", { text: e.name }), el("small", { text: fmtBytes(e.file.size) })])); });
+    if (state.files.length > 40) ul.appendChild(el("li", { text: "... and " + (state.files.length - 40) + " more" }));
+    var mains = state.files.filter(function (e) { return /\.(html?|tmx)$/i.test(e.name); });
+    $("mainWrap").hidden = mains.length < 2;
+    var sel = $("mainSel"); sel.textContent = "";
+    mains.forEach(function (e) { var o = el("option", { value: e.name, text: e.name }); if (e.name === state.main) o.selected = true; sel.appendChild(o); });
+    var audio = state.files.filter(function (e) { return /\.(mp3|wav|m4a|aac|ogg)$/i.test(e.name); });
+    ["voiceSel", "musicSel"].forEach(function (id) {
+      var s = $(id); s.textContent = ""; s.appendChild(el("option", { value: "", text: "None" }));
+      audio.forEach(function (a, i) { var o = el("option", { value: a.name, text: a.name }); if (id === "voiceSel" && i === 0) o.selected = true; s.appendChild(o); });
+    });
+    $("checkBtn").disabled = $("renderBtn").disabled = !state.main;
+    if (state.files.length && !state.main) alertBox("warn", "No .html or .tmx file found in what you added.");
+    else if (state.main) alertBox("", "");
+    $("reportCard").hidden = true; $("resultCard").hidden = true;
+    loadPreview();
+  }
+  $("mainSel").onchange = function () { state.main = this.value; loadPreview(); };
+
+  /* ---------- preview ---------- */
+  function loadPreview() {
+    var stage = $("stage"); stage.querySelectorAll("iframe").forEach(function (f) { f.remove(); });
+    var entry = state.files.filter(function (e) { return e.name === state.main; })[0];
+    if (!entry) { $("stageEmpty").hidden = false; return; }
+    entry.file.text().then(function (txt) {
+      var isTmx = /\.tmx$/i.test(entry.name);
+      var go = function (html, w, h) {
+        $("stageEmpty").hidden = true;
+        var f = el("iframe", { sandbox: "allow-scripts", title: "Preview" });
+        f.style.width = w + "px"; f.style.height = h + "px";
+        f.srcdoc = html;
+        stage.appendChild(f);
+        var fit = function () { var s = stage.clientWidth / w; f.style.transform = "scale(" + s + ")"; stage.style.aspectRatio = w + " / " + h; };
+        fit(); new ResizeObserver(fit).observe(stage);
+      };
+      if (isTmx) {
+        api("/api/compile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ source: txt }) }).then(function (r) { go(r.html, r.width, r.height); }).catch(function () {});
+      } else {
+        var w = /name=["']html2mp4:width["']\s+content=["'](\d+)/i.exec(txt), h = /name=["']html2mp4:height["']\s+content=["'](\d+)/i.exec(txt);
+        go(txt, w ? +w[1] : 1920, h ? +h[1] : 1080);
+      }
+    });
+  }
+
+  /* ---------- request body ---------- */
+  function buildBody() {
+    return Promise.all(state.files.map(function (e) { return b64(e.file).then(function (d) { return { name: e.name, data: d }; }); })).then(function (files) {
+      var num = function (id) { var v = $(id).value; return v === "" ? undefined : Number(v); };
+      return {
+        main: state.main, files: files,
+        flags: {
+          preset: $("preset").value || undefined, format: $("format").value, duration: num("duration"), fps: num("fps"),
+          quality: $("fast").checked ? "jpeg" : undefined, start: $("start").value.trim() || undefined,
+          voiceFile: $("voiceSel").value || undefined, musicFile: $("musicSel").value || undefined,
+          autoFit: !!$("voiceSel").value && $("autoFit").checked, duck: $("duck").checked && !!$("musicSel").value
+        }
+      };
+    });
+  }
+  function post(path, body) { return api(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); }
+
+  /* ---------- check ---------- */
+  var ICON = { pass: "\u2714", warn: "\u25B2", fail: "\u2716", info: "\u25CF" };
+  $("checkBtn").onclick = function () {
+    var btn = this; btn.disabled = true; btn.textContent = "Checking...";
+    buildBody().then(function (b) { return post("/api/check", b); }).then(function (r) {
+      var ul = $("report"); ul.textContent = "";
+      r.rows.forEach(function (row) {
+        var d = el("span", { text: row.detail });
+        if (row.fix && row.status !== "pass") d.appendChild(el("small", { text: row.fix }));
+        ul.appendChild(el("li", {}, [el("span", { class: row.status, text: ICON[row.status] || ICON.info }), el("b", { text: row.label }), d]));
+      });
+      $("reportCard").hidden = false; alertBox("", "");
+    }).catch(function (e) { alertBox("err", e.message); }).finally(function () { btn.disabled = !state.main; btn.textContent = "Check file"; });
+  };
+
+  /* ---------- render ---------- */
+  $("renderBtn").onclick = function () {
+    var btn = this; btn.disabled = true;
+    $("resultCard").hidden = true; $("progCard").hidden = false; $("progBar").style.width = "0"; $("progText").textContent = "Uploading..."; alertBox("", "");
+    buildBody().then(function (b) { return post("/api/render", b); }).then(function (r) {
+      state.jobId = r.id; $("progText").textContent = r.ahead > 0 ? "Waiting in line (" + r.ahead + " ahead)..." : "Starting...";
+      listen(r.id);
+    }).catch(function (e) { alertBox("err", e.message); $("progCard").hidden = true; btn.disabled = false; });
+  };
+  function listen(id) {
+    if (state.es) state.es.close();
+    var es = state.es = new EventSource("/api/jobs/" + id + "/events");
+    es.addEventListener("progress", function (e) {
+      var p = JSON.parse(e.data), pct = Math.floor(100 * p.done / p.total);
+      $("progBar").style.width = pct + "%";
+      $("progText").textContent = pct + "%  frame " + p.done + " of " + p.total + "  " + p.renderFps.toFixed(1) + " fps  about " + Math.ceil(p.etaSec) + "s left";
+    });
+    es.addEventListener("log", function (e) { $("progText").textContent = JSON.parse(e.data).message; });
+    es.addEventListener("done", function (e) {
+      es.close(); var r = JSON.parse(e.data);
+      $("progCard").hidden = true; $("renderBtn").disabled = false;
+      var url = "/api/jobs/" + id + "/file";
+      var p = $("player"); p.textContent = "";
+      if (r.format === "gif") p.appendChild(el("img", { src: url + "?inline=1", alt: "Rendered GIF" }));
+      else { var v = el("video", { src: url + "?inline=1", controls: "controls", playsinline: "playsinline" }); p.appendChild(v); }
+      $("dl").href = url; $("dl").setAttribute("download", r.file);
+      $("resultMeta").textContent = r.width + "x" + r.height + ", " + r.fps + " fps, " + r.durationSec + "s, " + fmtBytes(r.bytes) + ". Rendered in " + r.elapsedSec + "s." + (r.hasAudio ? " With audio." : "");
+      $("resultCard").hidden = false;
+      if (r.warnings && r.warnings.length) alertBox("warn", r.warnings.join("\n"));
+    });
+    es.addEventListener("error", function (e) {
+      if (!e.data) return; // connection hiccup
+      es.close(); var j = JSON.parse(e.data);
+      $("progCard").hidden = true; $("renderBtn").disabled = false;
+      alertBox("err", j.message + (j.hint ? "\n" + j.hint : ""));
+    });
+  }
+  $("cancelBtn").onclick = function () { if (state.jobId) api("/api/jobs/" + state.jobId + "/cancel", { method: "POST" }).catch(function () {}); };
+})();
+</script>
+</body>
+</html>
