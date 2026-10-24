@@ -12,7 +12,8 @@ describe("package metadata", () => {
     for (const [name, rel] of Object.entries(pkg.bin)) {
       const f = path.join(ROOT, rel);
       assert.ok(fs.existsSync(f), name);
-      assert.equal(fs.readFileSync(f, "utf8").split("\n")[0], "#!/usr/bin/env node");
+      // Windows checkouts end lines with CRLF, so ignore a trailing carriage return.
+      assert.equal(fs.readFileSync(f, "utf8").split("\n")[0].replace(/\r$/, ""), "#!/usr/bin/env node");
       if (process.platform !== "win32") assert.ok(fs.statSync(f).mode & 0o111, `${rel} should be executable`);
     }
   });
