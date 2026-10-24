@@ -1,6 +1,6 @@
 {
   "name": "tockmux",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Turn any self-playing HTML animation into a frame-perfect MP4, GIF or WebM. Deterministic virtual clock, voice-over sync, drag-and-drop Studio and an MCP server for AI agents.",
   "type": "module",
   "bin": {

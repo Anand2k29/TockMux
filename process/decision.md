@@ -148,3 +148,40 @@ If a new language is wanted later, it should be a separate decision.
 - No public hosting of the Studio. It listens on 127.0.0.1 only.
 
 Each of these can be a later decision, with its own reasons.
+
+---
+
+## Decisions added on 2026-10-24
+
+### D12. `tockmux` with no arguments opens a numbered menu
+**Why:** People who have never used a command line need a way to start without learning commands. Each menu item calls
+an ordinary command, so the menu adds no new behaviour. The menu opens only in a real terminal; in a pipe or a log,
+the old home screen is shown.
+
+### D13. The menu uses one line reader for the whole session
+**Why:** Piped input and pasted HTML were lost when each question opened and closed its own reader. One reader keeps
+every line in order.
+
+### D14. `demo` saves to the home folder when run from a drive root
+**Why:** Windows blocks writes to drive roots such as `D:\` in many setups, so the demo failed for new users. Other
+folders still use the current folder.
+
+### D15. Create folders only when they do not already exist
+**Why:** Node throws `EPERM` when asked to create a drive root, even though it exists. A shared helper,
+`src/core/fs-util.js`, now checks first.
+
+### D16. CI runs Node 20 and 22, on Windows and macOS
+**Why:** The browser installer (Playwright) requires Node 20 or newer, so Node 18 failed at setup. Ubuntu was removed
+from the matrix while the Windows and macOS results are checked.
+
+### D17. Use an SVG favicon file for the landing page
+**Why:** Browsers request `/favicon.ico` on their own. Serving a real icon file stops that request from returning an
+error.
+
+### D18. Publishing needs the author's own approval step
+**Why:** npm requires two-factor authentication to publish. The author completes the code or browser approval
+personally, so credentials never pass through the conversation.
+
+### D19. Process notes are split by question
+**Why:** One long file was hard to use. Each topic is now its own file: `what-and-why.md`, `how-it-works.md`,
+`flow.md`, `functions.mvp`, `mvp.md`, `using-as-import.md`, and this log.

@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.0.1
+
+- Numbered menu: run `tockmux` with no arguments to pick a task by number (render a file, paste HTML, samples, watch, check, Studio, setup check, guide).
+- `tockmux watch` re-renders on every save.
+- `tockmux demo` saves to your home folder when run from a drive root (Windows blocks writes there).
+- Fixed "EPERM" when writing into a drive root; folders are created only when missing.
+- Landing page: SVG favicon (stops the /favicon.ico 500 error), longer guide, promo films.
+- Contributing guide and a long README with an animated GIF.
+- CI now runs on Node 20 and 22 (Playwright needs Node 20).
+
 ## 4.0.0
 
 A ground-up rebuild. The renderer is new, so this is a major version.
