@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { ensureDir } from "./fs-util.js";
 
 /** Write a valid 16-bit mono PCM WAV containing a soft two-tone chime. Used by the demo and tests. */
 export function writeToneWav(file, seconds = 3, sampleRate = 22050) {
@@ -25,7 +26,7 @@ export function writeToneWav(file, seconds = 3, sampleRate = 22050) {
   h.writeUInt16LE(16, 34);
   h.write("data", 36);
   h.writeUInt32LE(data.length, 40);
-  fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
+  ensureDir(path.dirname(path.resolve(file)));
   fs.writeFileSync(file, Buffer.concat([h, data]));
   return file;
 }

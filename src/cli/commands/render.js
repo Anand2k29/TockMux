@@ -5,6 +5,7 @@ import { probeMedia, countFrames, runFfmpeg, buildMuxArgs } from "../../core/ffm
 import { presetNames } from "../../core/presets.js";
 import { findBrowser, installBrowser } from "../../core/browser.js";
 import { TockError } from "../../errors.js";
+import { ensureDir } from "../../core/fs-util.js";
 
 /** Settings shared by every command that opens a page. */
 export const PAGE_FLAGS = {
@@ -197,7 +198,7 @@ export const frameCommand = {
     const type = /\.jpe?g$/i.test(out) ? "jpeg" : "png";
     const sp = ui.spinner(`Capturing frame at ${at}s`);
     const { buffer, settings } = await snapshot({ input, flags, atSec: at, type }).catch((e) => (sp.fail("Capture failed"), Promise.reject(e)));
-    fs.mkdirSync(path.dirname(out), { recursive: true });
+    ensureDir(path.dirname(out));
     fs.writeFileSync(out, buffer);
     sp.succeed(`Saved ${ui.c.bold(ui.rel(out))} ${ui.c.gray(`${settings.width}x${settings.height}, ${ui.fmtBytes(buffer.length)}`)}`);
     if (ui.json) return { json: { output: out, at, width: settings.width, height: settings.height, bytes: buffer.length } };
@@ -307,7 +308,7 @@ export const syncCommand = {
       } else if (am.duration + (flags.voiceOffset || 0) > vm.duration + 0.25) {
         ui.warn(`The voice-over (${am.duration}s) is longer than the video (${vm.duration}s) and will be cut. Add --stretch to fit the video to it.`);
       }
-      fs.mkdirSync(path.dirname(out), { recursive: true });
+      ensureDir(path.dirname(out));
       await runFfmpeg(buildMuxArgs({ video: source, out, duration: dur, voice: path.resolve(voice), music: flags.music ? path.resolve(flags.music) : null, musicVolume: flags.musicVolume ?? 0.25, duck: flags.duck, voiceOffset: flags.voiceOffset || 0 }));
     } catch (e) {
       sp.fail("Could not mix the audio");

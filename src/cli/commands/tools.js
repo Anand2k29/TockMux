@@ -151,6 +151,12 @@ export const initCommand = {
   }
 };
 
+/** The demo is saved where you run it, unless that is a drive root (D:\), which Windows often blocks; then use your home folder. */
+function defaultDemoOutput() {
+  const cwd = process.cwd();
+  return path.parse(cwd).root === cwd ? path.join(os.homedir(), "tockmux-demo.mp4") : "tockmux-demo.mp4";
+}
+
 export const demoCommand = {
   name: "demo",
   aliases: [],
@@ -161,7 +167,7 @@ export const demoCommand = {
   async run({ flags, ui }) {
     ui.banner();
     await ensureBrowser(ui, flags);
-    const out = path.resolve(flags.output || "tockmux-demo.mp4");
+    const out = path.resolve(flags.output || defaultDemoOutput());
     const bar = ui.progress("Rendering demo");
     ui.step("Rendering a 6-second sample film from a .tmx script");
     const r = await convert({

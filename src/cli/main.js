@@ -6,6 +6,7 @@ import { getVersion } from "../version.js";
 import { findBrowser } from "../core/browser.js";
 import { renderCommand, checkCommand, frameCommand, batchCommand, syncCommand, probeCommand } from "./commands/render.js";
 import { watchCommand } from "./commands/watch.js";
+import { runMenu } from "./commands/menu.js";
 import { voiceCommand } from "./commands/voice.js";
 import { presetsCommand, setupCommand, doctorCommand, initCommand, demoCommand, studioCommand, mcpCommand, aboutCommand } from "./commands/tools.js";
 
@@ -78,7 +79,15 @@ export async function main(argv = process.argv.slice(2)) {
       return 0;
     }
     if (!argv.length) {
+      if (process.stdin.isTTY && process.stdout.isTTY && !ui.json) {
+        await runMenu({ ui, main });
+        return 0;
+      }
       await printHome(ui);
+      return 0;
+    }
+    if (argv[0] === "menu") {
+      await runMenu({ ui, main });
       return 0;
     }
     if (argv[0] === "help" || argv[0] === "--help" || argv[0] === "-h") {

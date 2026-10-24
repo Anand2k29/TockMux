@@ -8,6 +8,7 @@ import { startStaticServer } from "./static-server.js";
 import { compileTmxToHtml } from "../tmx/compiler.js";
 import { FrameEncoder, concatSegments, runFfmpeg, buildMuxArgs, buildGifArgs, buildWebmArgs, probeMedia } from "./ffmpeg.js";
 import { TockError } from "../errors.js";
+import { ensureDir } from "./fs-util.js";
 
 export const FORMATS = ["mp4", "webm", "gif"];
 
@@ -220,7 +221,7 @@ export async function renderVideo(opts) {
   let lastReport = 0;
 
   const outAbs = path.resolve(output);
-  fs.mkdirSync(path.dirname(outAbs), { recursive: true });
+  ensureDir(path.dirname(outAbs));
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "tockmux-"));
   const server = await startStaticServer(source.root, { virtualFiles: source.virtualFiles });
   let handle;
