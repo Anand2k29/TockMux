@@ -5,3 +5,6 @@ node_modules/
 .DS_Store
 tockmux-output/
 tockmux-demo.mp4
+
+# Internal process notes (not part of the repository)
+process/
