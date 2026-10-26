@@ -32,102 +32,85 @@
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font: 400 17px/1.6 var(--body);
-    -webkit-font-smoothing: antialiased;
-  }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
   a { color: inherit; }
   img, video { max-width: 100%; display: block; }
-  :focus-visible { outline: 3px solid var(--mustard); outline-offset: 3px; border-radius: 4px; }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
   code, pre { font-family: var(--mono); }
   code { font-size: .88em; background: var(--paper-2); border: 1px solid var(--rule); padding: 1px 6px; border-radius: 4px; }
   .wrap { width: min(1180px, 100% - 48px); margin: 0 auto; }
   h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.02; letter-spacing: -0.02em; }
-  h1 { font-size: clamp(46px, 7.4vw, 96px); font-weight: 900; font-stretch: 62%; text-transform: uppercase; }
+  h1 { font-size: clamp(46px, 7.2vw, 94px); font-weight: 900; font-stretch: 62%; text-transform: uppercase; }
   h2 { font-size: clamp(34px, 4.6vw, 60px); font-weight: 900; font-stretch: 70%; text-transform: uppercase; }
-  h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; }
+  h3 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
   p { margin: 0; }
   .lede { font-size: clamp(18px, 1.9vw, 21px); color: var(--ink-2); max-width: 38em; }
-  .mute { color: var(--mute); }
-  .fine { font-size: 14px; color: var(--mute); margin-top: 14px; }
-
-  /* ---------- timeline chrome (the signature) ---------- */
-  .timecode { font-family: var(--mono); font-size: 13px; letter-spacing: .04em; color: var(--mute); }
-  .timecode b { color: var(--ink); font-weight: 700; }
-  .tag {
-    display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12px; font-weight: 700;
-    letter-spacing: .12em; text-transform: uppercase; color: var(--ink);
-  }
+  .tag { display: inline-flex; align-items: center; gap: 10px; font: 700 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
   .tag::before { content: ""; width: 10px; height: 10px; background: var(--rose); border-radius: 2px; }
+  .timecode { font: 500 13px var(--mono); color: var(--mute); }
+  .timecode b { color: var(--ink); }
 
-  /* The playhead: a thin ruler with ticks, fixed to the top of the page. */
-  .ruler { position: fixed; left: 0; right: 0; top: 0; height: 22px; z-index: 30; pointer-events: none;
-    background: var(--ink); color: var(--paper); }
-  .ruler .ticks { position: absolute; inset: 0;
-    background-image: repeating-linear-gradient(90deg, rgba(244,239,227,.35) 0 1px, transparent 1px 12px);
-    background-size: 100% 6px; background-repeat: repeat-x; background-position: 0 100%; background-clip: content-box; }
+  /* Playhead ruler across the top. */
+  .ruler { position: fixed; left: 0; right: 0; top: 0; height: 22px; z-index: 30; background: var(--ink); pointer-events: none; }
   .ruler .head { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: var(--mustard); }
   .ruler .readout { position: absolute; right: 16px; top: 3px; font: 700 11px/1 var(--mono); letter-spacing: .08em; color: var(--mustard); }
 
-  /* ---------- header ---------- */
   header.top { position: sticky; top: 22px; z-index: 20; background: var(--paper); border-bottom: 2px solid var(--ink); }
-  header.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 24px; }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font: 900 24px/1 var(--display); font-stretch: 62%; text-transform: uppercase; }
-  .brand .reel { width: 30px; height: 30px; border: 2px solid var(--ink); border-radius: 50%; position: relative; background: var(--mustard); }
-  .brand .reel::after { content: ""; position: absolute; inset: 9px; background: var(--ink); border-radius: 50%; }
-  nav.links { display: flex; gap: 26px; font: 700 13px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+  .brand .reel { width: 28px; height: 28px; border: 2px solid var(--ink); border-radius: 50%; background: var(--mustard); position: relative; }
+  .brand .reel::after { content: ""; position: absolute; inset: 8px; background: var(--ink); border-radius: 50%; }
+  nav.links { display: flex; gap: 24px; font: 700 13px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
   nav.links a { text-decoration: none; padding-bottom: 3px; border-bottom: 2px solid transparent; }
   nav.links a:hover { border-bottom-color: var(--rose); }
   @media (max-width: 920px) { nav.links { display: none; } }
 
-  /* ---------- buttons ---------- */
-  .btn {
-    display: inline-flex; align-items: center; gap: 10px; font: 800 15px var(--body); text-decoration: none;
-    padding: 14px 22px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
-    transition: background .12s ease, color .12s ease;
-  }
+  .btn { display: inline-flex; align-items: center; gap: 10px; font: 800 15px var(--body); text-decoration: none; padding: 14px 22px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); cursor: pointer; transition: background .15s ease, color .15s ease; }
   .btn:hover { background: var(--ink); color: var(--paper); }
   .btn.solid { background: var(--mustard); }
   .btn.solid:hover { background: var(--ink); color: var(--mustard); }
   .btns { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
 
-  /* ---------- hero ---------- */
-  .hero { padding: 64px 0 56px; border-bottom: 2px solid var(--ink); }
-  .hero-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 36px; flex-wrap: wrap; }
-  .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
+  /* Hero */
+  .hero { padding: 60px 0 56px; border-bottom: 2px solid var(--ink); }
+  .hero-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 34px; flex-wrap: wrap; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
   .hero h1 .rose { color: var(--rose); }
-  .hero .lede { margin-top: 26px; }
-  .cli {
-    margin-top: 34px; background: var(--ink); color: var(--paper); padding: 18px 20px; display: flex;
-    justify-content: space-between; align-items: center; gap: 14px; font-family: var(--mono); font-size: 16px;
-    border-left: 8px solid var(--mustard);
-  }
+  .hero .lede { margin-top: 24px; }
+  .cli { margin-top: 32px; background: var(--ink); color: var(--paper); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 14px; font: 16px var(--mono); border-left: 8px solid var(--mustard); }
   .cli .p { color: var(--mustard); margin-right: 12px; }
-  .copy { font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; background: transparent; color: var(--paper);
-    border: 2px solid var(--paper); padding: 8px 12px; cursor: pointer; flex: none; }
+  .copy { font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; background: transparent; color: var(--paper); border: 2px solid var(--paper); padding: 8px 12px; cursor: pointer; flex: none; }
   .copy:hover { background: var(--paper); color: var(--ink); }
-  .fine { font-size: 14px; margin-top: 14px; color: var(--mute); }
+  .fine { font-size: 14px; color: var(--mute); margin-top: 14px; }
 
-  /* film frame: sprocket holes top and bottom */
-  .reel-frame {
-    position: relative; background: var(--ink); padding: 26px 0; border-radius: 4px;
-    box-shadow: 14px 14px 0 var(--mustard);
+  /* 3D stage: a film-strip cylinder of real frames. CSS 3D only, no library. */
+  .stage { position: relative; height: 420px; perspective: 1400px; perspective-origin: 50% 45%; }
+  .cylinder { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transform: translate(-50%, -50%) rotateX(-8deg) rotateY(var(--spin, 0deg)); }
+  .cylinder.auto { animation: spin 40s linear infinite; }
+  .stage.paused .cylinder.auto { animation-play-state: paused; }
+  .frame {
+    position: absolute; left: -130px; top: -80px; width: 260px; height: 160px;
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(330px);
+    background: var(--ink); padding: 10px 10px 26px; border: 2px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--mustard);
+    backface-visibility: hidden;
   }
-  .reel-frame::before, .reel-frame::after {
-    content: ""; position: absolute; left: 0; right: 0; height: 14px;
-    background-image: radial-gradient(circle, var(--paper) 4px, transparent 4.5px);
-    background-size: 26px 14px; background-repeat: repeat-x; background-position: 8px 0; opacity: .85;
-  }
-  .reel-frame::before { top: 4px; }
-  .reel-frame::after { bottom: 4px; }
+  .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .frame::before, .frame::after { content: ""; position: absolute; left: 0; right: 0; height: 6px; background-image: radial-gradient(circle, var(--paper) 2px, transparent 2.5px); background-size: 14px 6px; opacity: .6; }
+  .frame::before { top: 2px; }
+  .frame::after { bottom: 18px; }
+  .stage-controls { position: absolute; left: 0; bottom: -6px; display: flex; gap: 10px; }
+  .stage-controls button { font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; background: var(--paper); border: 2px solid var(--ink); padding: 8px 12px; cursor: pointer; }
+  .stage-controls button:hover { background: var(--ink); color: var(--paper); }
+  .counter { position: absolute; right: 0; bottom: -6px; font: 700 15px var(--mono); border: 2px solid var(--ink); padding: 8px 12px; background: var(--ink); color: var(--mustard); letter-spacing: .08em; }
+
+  /* Film frame around the video, tilted in 3D on scroll. */
+  .reel-frame { position: relative; background: var(--ink); padding: 26px 0; box-shadow: 14px 14px 0 var(--mustard); transform: rotateX(var(--tilt, 0deg)); transition: transform .2s linear; transform-origin: 50% 0; }
   .reel-frame video { width: calc(100% - 52px); margin: 0 26px; background: #000; }
-  .reel-meta { display: flex; justify-content: space-between; font: 700 12px var(--mono); color: var(--paper); padding: 16px 26px 0; letter-spacing: .05em; }
+  .reel-meta { display: flex; justify-content: space-between; font: 700 12px var(--mono); color: var(--paper); padding: 16px 26px 0; }
   .reel-meta span:last-child { color: var(--mustard); }
 
-  /* ---------- stats as a timecode strip ---------- */
+  /* Strip of stats */
   .strip { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 2px solid var(--ink); }
   .strip > div { padding: 26px 26px 28px 0; border-right: 1px solid var(--rule); margin-right: 26px; }
   .strip > div:last-child { border-right: 0; }
@@ -136,20 +119,17 @@
   .strip span { font-size: 15px; color: var(--mute); }
   @media (max-width: 860px) { .strip { grid-template-columns: 1fr 1fr; } .strip > div:nth-child(2) { border-right: 0; } }
 
-  /* ---------- sections ---------- */
   section { padding: 96px 0; border-bottom: 2px solid var(--ink); }
   .head { display: grid; grid-template-columns: 180px 1fr; gap: 28px; margin-bottom: 56px; align-items: start; }
   .head .timecode { padding-top: 12px; }
   .head p { margin-top: 18px; }
   @media (max-width: 860px) { .head { grid-template-columns: 1fr; gap: 14px; } }
 
-  /* ---------- frame cards (features) ---------- */
+  /* Frame cards with a 3D tilt that follows the pointer. */
   .frames { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-  .frame-card {
-    position: relative; background: var(--white, #FFFDF7); border: 2px solid var(--ink); padding: 34px 26px 26px;
-    box-shadow: 8px 8px 0 var(--ink);
-  }
-  .frame-card .no { font: 700 12px var(--mono); letter-spacing: .08em; color: var(--mute); display: flex; justify-content: space-between; margin-bottom: 26px; }
+  .frame-card { position: relative; background: #FFFDF7; border: 2px solid var(--ink); padding: 30px 26px 26px; box-shadow: 8px 8px 0 var(--ink); transform-style: preserve-3d; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease, box-shadow .25s ease; }
+  .frame-card:hover { box-shadow: 14px 14px 0 var(--ink); }
+  .frame-card .no { font: 700 12px var(--mono); letter-spacing: .08em; color: var(--mute); display: flex; justify-content: space-between; margin-bottom: 24px; }
   .frame-card .no b { color: var(--ink); }
   .frame-card.rose { background: var(--rose); }
   .frame-card.sage { background: var(--sage); }
@@ -157,21 +137,20 @@
   .frame-card.mustard { background: var(--mustard); }
   .frame-card.lilac { background: var(--lilac); }
   .frame-card.paper { background: var(--paper-2); }
-  .frame-card p { color: var(--ink-2); margin-top: 6px; font-size: 16px; }
-  .frame-card pre { margin: 18px 0 0; background: var(--ink); color: var(--paper); padding: 12px 14px; font-size: 13.5px; overflow-x: auto; }
+  .frame-card p { color: var(--ink-2); font-size: 16px; }
+  .frame-card pre { margin: 16px 0 0; background: var(--ink); color: var(--paper); padding: 12px 14px; font-size: 13.5px; overflow-x: auto; max-width: 100%; }
   .frame-card.wide { grid-column: span 2; }
   @media (max-width: 920px) { .frames { grid-template-columns: 1fr; } .frame-card.wide { grid-column: span 1; } }
 
-  /* ---------- numbered timeline ---------- */
-  .track { position: relative; display: grid; gap: 0; border-left: 2px solid var(--ink); margin-left: 8px; }
+  /* Timeline */
+  .track { position: relative; border-left: 2px solid var(--ink); margin-left: 8px; }
   .track-item { position: relative; padding: 0 0 46px 44px; }
   .track-item:last-child { padding-bottom: 0; }
   .track-item::before { content: ""; position: absolute; left: -9px; top: 6px; width: 16px; height: 16px; background: var(--mustard); border: 2px solid var(--ink); border-radius: 50%; }
   .track-item .timecode { display: block; margin-bottom: 8px; }
-  .track-item h3 { font-size: 26px; text-transform: uppercase; font-family: var(--display); font-stretch: 70%; font-weight: 900; }
+  .track-item h3 { font-size: 26px; text-transform: uppercase; font-stretch: 70%; font-weight: 900; }
   .track-item p { margin-top: 10px; color: var(--ink-2); max-width: 46em; }
 
-  /* ---------- table ---------- */
   .sheet { border: 2px solid var(--ink); background: var(--paper); overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 16px; }
   th, td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--rule); vertical-align: top; }
@@ -180,54 +159,52 @@
   tr:last-child td { border-bottom: 0; }
   td.hit { background: var(--mustard); font-weight: 700; }
 
-  /* ---------- code panels ---------- */
-  .panel { border: 2px solid var(--ink); background: var(--ink); color: var(--paper); box-shadow: 10px 10px 0 var(--rose); }
+  .panel { border: 2px solid var(--ink); background: var(--ink); color: var(--paper); box-shadow: 10px 10px 0 var(--rose); min-width: 0; }
   .panel .strip-top { display: flex; justify-content: space-between; padding: 10px 16px; font: 700 12px var(--mono); border-bottom: 1px solid rgba(244,239,227,.2); color: var(--mustard); }
-  .panel pre { margin: 0; padding: 20px; font-size: 14px; line-height: 1.75; overflow-x: auto; }
+  .panel pre { margin: 0; padding: 20px; font-size: 14px; line-height: 1.75; overflow-x: auto; max-width: 100%; }
   .panel .c { color: var(--sage); }
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
   .split > * { min-width: 0; }
-  .panel { max-width: 100%; }
-  .frame-card pre, .panel pre { max-width: 100%; }
   @media (max-width: 860px) { .split { grid-template-columns: 1fr; gap: 36px; } }
 
-  /* ---------- limits list ---------- */
-  .limits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 2px solid var(--ink); }
+  .limits { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--ink); }
   .limits > div { padding: 26px 26px 28px 0; border-bottom: 1px solid var(--rule); }
   .limits > div:nth-child(odd) { border-right: 1px solid var(--rule); padding-right: 26px; }
   .limits > div:nth-child(even) { padding-left: 26px; }
   .limits b { font: 900 22px/1.1 var(--display); font-stretch: 70%; text-transform: uppercase; display: block; margin-bottom: 8px; }
   .limits p { color: var(--ink-2); }
-  @media (max-width: 860px) { .limits { grid-template-columns: 1fr; } .limits > div:nth-child(n) { border-right: 0; padding: 22px 0; } }
+  @media (max-width: 860px) { .limits { grid-template-columns: 1fr; } .limits > div { border-right: 0 !important; padding: 22px 0 !important; } }
 
-  /* ---------- faq ---------- */
   .faq details { border-bottom: 1px solid var(--rule); padding: 22px 0; }
   .faq details:first-child { border-top: 2px solid var(--ink); }
-  .faq summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 90px 1fr 30px; gap: 16px; align-items: baseline; font: 800 21px/1.2 var(--display); font-stretch: 70%; text-transform: uppercase; }
+  .faq summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 60px 1fr 24px; gap: 16px; align-items: baseline; font: 800 21px/1.2 var(--display); font-stretch: 70%; text-transform: uppercase; }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary .timecode { font-size: 12px; }
   .faq summary::after { content: "+"; font: 700 24px var(--mono); text-align: right; }
   .faq details[open] summary::after { content: "–"; }
-  .faq details p { margin: 14px 0 0 106px; color: var(--ink-2); max-width: 44em; }
-  @media (max-width: 640px) { .faq details p { margin-left: 0; } .faq summary { grid-template-columns: 1fr 24px; } .faq summary .timecode { grid-column: 1 / -1; } }
+  .faq details p { margin: 14px 0 0 76px; color: var(--ink-2); max-width: 44em; }
+  @media (max-width: 640px) { .faq details p { margin-left: 0; } }
 
-  /* ---------- contact ---------- */
   .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .contact .frame-card { text-decoration: none; display: block; }
-  .contact .frame-card:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 var(--ink); }
-  .contact .frame-card { transition: transform .12s ease, box-shadow .12s ease; }
-  .handle { font: 900 30px/1.1 var(--display); font-stretch: 62%; text-transform: uppercase; margin-top: 6px; }
   @media (max-width: 760px) { .contact { grid-template-columns: 1fr; } }
+  .handle { font: 900 30px/1.1 var(--display); font-stretch: 62%; text-transform: uppercase; margin-top: 6px; }
+  a.frame-card { text-decoration: none; display: block; }
 
   footer { padding: 34px 0 48px; font: 500 13px var(--mono); color: var(--mute); }
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
   footer a { text-decoration: none; }
   footer a:hover { color: var(--ink); text-decoration: underline; }
 
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  /* Reduced motion: keep the content, drop the movement. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .cylinder.auto { animation: none !important; }
+    .frame-card, .reel-frame { transform: none !important; transition: none !important; }
+  }
+
   @media (max-width: 920px) {
     .hero-grid { grid-template-columns: 1fr; gap: 48px; }
     .hero { padding: 40px 0 48px; }
+    .stage { height: 340px; }
     section { padding: 72px 0; }
   }
   @media (max-width: 480px) {
@@ -235,11 +212,12 @@
     .btn { width: 100%; justify-content: center; }
     .wrap { width: calc(100% - 32px); }
   }
+  @keyframes spin { from { transform: translate(-50%, -50%) rotateX(-8deg) rotateY(0deg); } to { transform: translate(-50%, -50%) rotateX(-8deg) rotateY(360deg); } }
 </style>
 </head>
 <body>
 
-<div class="ruler" aria-hidden="true"><div class="ticks"></div><div class="head" id="head"></div><div class="readout" id="readout">00:00:00:00</div></div>
+<div class="ruler" aria-hidden="true"><div class="head" id="head"></div><div class="readout" id="readout">00:00:00:00</div></div>
 
 <header class="top">
   <div class="wrap">
@@ -257,17 +235,16 @@
 
 <main id="top">
 
-  <!-- HERO -->
   <div class="hero">
     <div class="wrap">
       <div class="hero-top">
         <span class="tag">Frame-perfect HTML to video</span>
-        <span class="timecode">v4.0.1 · MIT · <b>npm</b> tockmux</span>
+        <span class="timecode">v4.0.1 · MIT · npm <b>tockmux</b></span>
       </div>
       <div class="hero-grid">
         <div>
-          <h1>Your page moves.<br><span class="rose">Now it</span> plays.</h1>
-          <p class="lede">TockMux takes an HTML animation and records it one frame at a time, on a clock it controls. The MP4 is smooth, the exact size you asked for, and identical on every computer. No screen recording. No dropped frames.</p>
+          <h1>Your page moves. <span class="rose">Now it</span> plays.</h1>
+          <p class="lede" style="margin-top:24px">TockMux takes an HTML animation and records it one frame at a time, on a clock it controls. The MP4 is smooth, the exact size you asked for, and identical on every computer. No screen recording. No dropped frames.</p>
 
           <div class="cli" role="group" aria-label="Install command">
             <span><span class="p">$</span><span id="install-cmd">npm install -g tockmux</span></span>
@@ -281,18 +258,28 @@
           </div>
         </div>
 
-        <div class="reel-frame" id="video">
-          <video controls preload="metadata" playsinline aria-label="TockMux launch film">
-            <source src="promo.mp4" type="video/mp4">
-            Your browser cannot play this video. <a href="promo.mp4">Download the MP4</a>.
-          </video>
-          <div class="reel-meta"><span>TOCKMUX_LAUNCH.MP4</span><span>30 s · 1920×1080 · 30 fps</span></div>
+        <div>
+          <div class="stage" id="stage" role="img" aria-label="A rotating strip of frames from the TockMux launch film">
+            <div class="cylinder auto" id="cylinder">
+              <div class="frame" style="--i:0"><img src="frames/f1.jpg" alt="Frame from the TockMux film: the animated page"></div>
+              <div class="frame" style="--i:1"><img src="frames/f4.jpg" alt="Frame: the page moves on its own"></div>
+              <div class="frame" style="--i:2"><img src="frames/f7.jpg" alt="Frame: the virtual clock"></div>
+              <div class="frame" style="--i:3"><img src="frames/f10.jpg" alt="Frame: the frame counter"></div>
+              <div class="frame" style="--i:4"><img src="frames/f13.jpg" alt="Frame: frames drop into the film strip"></div>
+              <div class="frame" style="--i:5"><img src="frames/f16.jpg" alt="Frame: the install line"></div>
+              <div class="frame" style="--i:6"><img src="frames/f19.jpg" alt="Frame: the TockMux logo"></div>
+              <div class="frame" style="--i:7"><img src="frames/f22.jpg" alt="Frame: the end card"></div>
+            </div>
+            <div class="counter" id="counter">FRAME 001</div>
+            <div class="stage-controls">
+              <button type="button" id="pause-btn" aria-pressed="false">Pause motion</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- STRIP -->
   <div class="wrap">
     <div class="strip">
       <div><span class="timecode">00:00:00:00</span><b>Same every run</b><span>Seeded randomness and a virtual clock.</span></div>
@@ -302,7 +289,27 @@
     </div>
   </div>
 
-  <!-- WHY -->
+  <section id="video">
+    <div class="wrap split">
+      <div>
+        <span class="tag">Made with TockMux</span>
+        <h2 style="margin-top:20px">Watch the film.</h2>
+        <p class="lede" style="margin-top:20px">This film was rendered by TockMux itself, from a plain HTML page with CSS and JavaScript animation. Nothing was recorded from a screen.</p>
+        <div class="btns">
+          <a class="btn" href="promo.mp4" download>Download the MP4</a>
+          <a class="btn" href="https://github.com/Anand2k29/TockMux">View on GitHub</a>
+        </div>
+      </div>
+      <div class="reel-frame" id="reel">
+        <video controls preload="metadata" playsinline aria-label="TockMux launch film">
+          <source src="promo.mp4" type="video/mp4">
+          Your browser cannot play this video. <a href="promo.mp4">Download the MP4</a>.
+        </video>
+        <div class="reel-meta"><span>TOCKMUX_LAUNCH.MP4</span><span>30 s · 1920×1080</span></div>
+      </div>
+    </div>
+  </section>
+
   <section id="why">
     <div class="wrap">
       <div class="head">
@@ -314,16 +321,15 @@
         </div>
       </div>
       <div class="frames">
-        <div class="frame-card rose"><div class="no"><span><b>F001</b></span><span>repeatable</span></div><h3>Same frames, every time</h3><p>Render again tomorrow, on another computer, and get the same picture.</p></div>
-        <div class="frame-card sage"><div class="no"><span><b>F002</b></span><span>exact size</span></div><h3>The size you chose</h3><p>TikTok, YouTube, square, 4K, or your own size. Not whatever your window happens to be.</p></div>
-        <div class="frame-card mustard"><div class="no"><span><b>F003</b></span><span>voice</span></div><h3>Narration that fits</h3><p><code>--auto-fit</code> stretches the animation until it matches the voice.</p></div>
-        <div class="frame-card wide lilac"><div class="no"><span><b>F004</b></span><span>for everyone</span></div><h3>Creators, developers and teams</h3><p>Creators turn one animation into many posts. Developers render inside a build or CI job with one <code>convert()</code> call. Teams keep one source file and re-render when the copy changes.</p></div>
-        <div class="frame-card slate"><div class="no"><span><b>F005</b></span><span>one command</span></div><h3>No editor open</h3><p>From an HTML file to a finished video in a single line.</p></div>
+        <div class="frame-card rose" data-tilt><div class="no"><span><b>F001</b></span><span>repeatable</span></div><h3>Same frames, every time</h3><p>Render again tomorrow, on another computer, and get the same picture.</p></div>
+        <div class="frame-card sage" data-tilt><div class="no"><span><b>F002</b></span><span>exact size</span></div><h3>The size you chose</h3><p>TikTok, YouTube, square, 4K, or your own size. Not whatever your window happens to be.</p></div>
+        <div class="frame-card mustard" data-tilt><div class="no"><span><b>F003</b></span><span>voice</span></div><h3>Narration that fits</h3><p><code>--auto-fit</code> stretches the animation until it matches the voice.</p></div>
+        <div class="frame-card wide lilac" data-tilt><div class="no"><span><b>F004</b></span><span>for everyone</span></div><h3>Creators, developers and teams</h3><p>Creators turn one animation into many posts. Developers render inside a build or CI job with one <code>convert()</code> call. Teams keep one source file and re-render when the copy changes.</p></div>
+        <div class="frame-card slate" data-tilt><div class="no"><span><b>F005</b></span><span>one command</span></div><h3>No editor open</h3><p>From an HTML file to a finished video in a single line.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- STUDIO TIMELINE: how it works -->
   <section id="how">
     <div class="wrap split">
       <div>
@@ -341,7 +347,6 @@
     </div>
   </section>
 
-  <!-- FEATURES -->
   <section id="features">
     <div class="wrap">
       <div class="head">
@@ -352,42 +357,16 @@
         </div>
       </div>
       <div class="frames">
-        <div class="frame-card paper wide"><div class="no"><span><b>T01</b></span><span>menu</span></div><h3>A numbered menu</h3><p>Type <code>tockmux</code> and pick a number: render a file, paste HTML, try a sample, watch a file, check it, or open Studio.</p></div>
-        <div class="frame-card sky"><div class="no"><span><b>T02</b></span><span>watch</span></div><h3>Render on save</h3><p><code>tockmux watch</code> re-renders every time you save the file.</p></div>
-        <div class="frame-card sage"><div class="no"><span><b>T03</b></span><span>check</span></div><h3>Check before you wait</h3><p>Finds still images and clicks you forgot, before a long render.</p></div>
-        <div class="frame-card rose"><div class="no"><span><b>T04</b></span><span>batch</span></div><h3>A whole folder</h3><p><code>tockmux batch ./slides --out-dir ./videos</code> renders a set in one go.</p></div>
-        <div class="frame-card mustard"><div class="no"><span><b>T05</b></span><span>.tmx</span></div><h3>Title films</h3><p>Short scripts with titles, counters and bars. No HTML needed.</p></div>
-        <div class="frame-card lilac"><div class="no"><span><b>T06</b></span><span>doctor</span></div><h3>Plain-English errors</h3><p>Each problem has a line number and a fix. <code>tockmux doctor</code> checks the setup.</p></div>
+        <div class="frame-card paper wide" data-tilt><div class="no"><span><b>T01</b></span><span>menu</span></div><h3>A numbered menu</h3><p>Type <code>tockmux</code> and pick a number: render a file, paste HTML, try a sample, watch a file, check it, or open Studio.</p></div>
+        <div class="frame-card slate" data-tilt><div class="no"><span><b>T02</b></span><span>watch</span></div><h3>Render on save</h3><p><code>tockmux watch</code> re-renders every time you save the file.</p></div>
+        <div class="frame-card sage" data-tilt><div class="no"><span><b>T03</b></span><span>check</span></div><h3>Check before you wait</h3><p>Finds still images and forgotten clicks before a long render.</p></div>
+        <div class="frame-card rose" data-tilt><div class="no"><span><b>T04</b></span><span>batch</span></div><h3>A whole folder</h3><p><code>tockmux batch ./slides --out-dir ./videos</code> renders a set in one go.</p></div>
+        <div class="frame-card mustard" data-tilt><div class="no"><span><b>T05</b></span><span>.tmx</span></div><h3>Title films</h3><p>Short scripts with titles, counters and bars. No HTML needed.</p></div>
+        <div class="frame-card lilac" data-tilt><div class="no"><span><b>T06</b></span><span>doctor</span></div><h3>Plain-English errors</h3><p>Each problem has a line number and a fix. <code>tockmux doctor</code> checks the setup.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- COMPARE -->
-  <section id="compare">
-    <div class="wrap">
-      <div class="head">
-        <span class="timecode"><b>00:00:04</b><br>compared</span>
-        <div>
-          <span class="tag">Where it fits</span>
-          <h2 style="margin-top:20px">Screen recording or TockMux?</h2>
-        </div>
-      </div>
-      <div class="sheet">
-        <table>
-          <thead><tr><th>You want</th><th>Screen recording</th><th>Video frameworks</th><th>TockMux</th></tr></thead>
-          <tbody>
-            <tr><td>Same output every run</td><td>No</td><td>Yes</td><td class="hit">Yes</td></tr>
-            <tr><td>Use the HTML you already have</td><td>Yes</td><td>Varies by tool</td><td class="hit">Yes, as it is</td></tr>
-            <tr><td>Voice-over stretches the animation</td><td>No</td><td>Varies</td><td class="hit">Yes, <code>--auto-fit</code></td></tr>
-            <tr><td>Terminal, app and AI assistant</td><td>No</td><td>Varies</td><td class="hit">All three</td></tr>
-            <tr><td>Setup for a beginner</td><td>Easy but fragile</td><td>Developer setup</td><td class="hit">Menu, <code>setup</code>, <code>doctor</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- START -->
   <section id="start">
     <div class="wrap">
       <div class="head">
@@ -399,47 +378,14 @@
         </div>
       </div>
       <div class="frames">
-        <div class="frame-card mustard"><div class="no"><span><b>S1</b></span><span>install</span></div><pre>npm install -g tockmux</pre></div>
-        <div class="frame-card sage"><div class="no"><span><b>S2</b></span><span>once</span></div><pre>tockmux setup</pre><p class="fine" style="margin-top:12px;font-size:14px">Skipped if you already have Chrome or Edge.</p></div>
-        <div class="frame-card rose"><div class="no"><span><b>S3</b></span><span>render</span></div><pre>tockmux render my.html
+        <div class="frame-card mustard" data-tilt><div class="no"><span><b>S1</b></span><span>install</span></div><pre>npm install -g tockmux</pre></div>
+        <div class="frame-card sage" data-tilt><div class="no"><span><b>S2</b></span><span>once</span></div><pre>tockmux setup</pre><p style="margin-top:12px;font-size:14px">Skipped if you already have Chrome or Edge.</p></div>
+        <div class="frame-card rose" data-tilt><div class="no"><span><b>S3</b></span><span>render</span></div><pre>tockmux render my.html
 tockmux watch my.html</pre></div>
       </div>
     </div>
   </section>
 
-  <!-- YOUR FIRST PAGE -->
-  <section id="first">
-    <div class="wrap split">
-      <div>
-        <div class="head" style="margin-bottom:24px;display:block">
-          <span class="tag">Your first page</span>
-          <h2 style="margin-top:20px">Six seconds of motion.</h2>
-        </div>
-        <p class="lede">Save this as <code>my.html</code>, then run <code>tockmux render my.html</code>. You get a six-second MP4 with a square sliding across the frame.</p>
-        <div class="btns"><a class="btn" href="https://www.npmjs.com/package/tockmux">Full guide on npm</a><a class="btn" href="#limits">Read the limits</a></div>
-      </div>
-      <div class="panel">
-        <div class="strip-top"><span>my.html</span><span>6 s</span></div>
-        <pre>&lt;!doctype html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;meta name="html2mp4:duration" content="6"&gt;
-  &lt;style&gt;
-    body { margin: 0; background: #F4EFE3; }
-    .box { position: absolute; top: 400px; left: 0;
-           width: 200px; height: 200px;
-           background: #E3B95C; border: 6px solid #161514;
-           animation: move 6s linear infinite; }
-    @keyframes move { to { left: 1520px; } }
-  &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;&lt;div class="box"&gt;&lt;/div&gt;&lt;/body&gt;
-&lt;/html&gt;</pre>
-      </div>
-    </div>
-  </section>
-
-  <!-- LIMITS -->
   <section id="limits">
     <div class="wrap">
       <div class="head">
@@ -450,7 +396,6 @@ tockmux watch my.html</pre></div>
           <p class="lede">Precise on purpose, so you know before you start.</p>
         </div>
       </div>
-
       <div class="sheet">
         <table>
           <thead><tr><th>File</th><th>What it is for</th><th>Notes</th></tr></thead>
@@ -463,7 +408,6 @@ tockmux watch my.html</pre></div>
         </table>
       </div>
       <p class="fine" style="margin:16px 0 48px">Anything else, such as <code>.txt</code>, <code>.pdf</code>, <code>.docx</code>, or a lone <code>.png</code> or <code>.jpg</code>, is refused. Images and fonts a page uses are fine.</p>
-
       <div class="limits">
         <div><b>One hour, maximum</b><p>Without a length the video is 10 seconds. Set it with <code>--duration 20</code> or a meta tag.</p></div>
         <div><b>Render time</b><p>A 30-second 1280×720 film takes about 40 to 50 seconds on a normal computer.</p></div>
@@ -472,15 +416,13 @@ tockmux watch my.html</pre></div>
         <div><b>What it cannot record</b><p>Pages that need a click, typing or a login (a single click at the start works with <code>--start</code>). Sound the page plays itself (use <code>--voice</code> or <code>--music</code>). Protected embeds such as YouTube.</p></div>
         <div><b>Not sure it moves?</b><p>Run <code>tockmux check landing.html</code> first.</p></div>
       </div>
-
       <div class="split" style="margin-top:56px;gap:28px">
-        <div class="frame-card sage"><div class="no"><span><b>A</b></span><span>already moves</span></div><h3>Record it for a set time</h3><pre>tockmux render landing.html --duration 20</pre></div>
-        <div class="frame-card sky"><div class="no"><span><b>B</b></span><span>static page</span></div><h3>Describe the look</h3><p>A static page renders as a still image. <code>/tockmux:make</code> writes an animated page to match your description.</p><pre>/tockmux:make a 20-second promo, warm colours</pre></div>
+        <div class="frame-card sage" data-tilt><div class="no"><span><b>A</b></span><span>already moves</span></div><h3>Record it for a set time</h3><pre>tockmux render landing.html --duration 20</pre></div>
+        <div class="frame-card slate" data-tilt><div class="no"><span><b>B</b></span><span>static page</span></div><h3>Describe the look</h3><p>A static page renders as a still image. <code>/tockmux:make</code> writes an animated page to match your description.</p><pre>/tockmux:make a 20-second promo, warm colours</pre></div>
       </div>
     </div>
   </section>
 
-  <!-- AI -->
   <section id="ai">
     <div class="wrap split">
       <div>
@@ -502,7 +444,6 @@ claude mcp add tockmux -- npx -y tockmux mcp
     </div>
   </section>
 
-  <!-- LIBRARY -->
   <section id="library">
     <div class="wrap split">
       <div>
@@ -525,7 +466,6 @@ console.log(result.output, result.durationSec);</pre>
     </div>
   </section>
 
-  <!-- FAQ -->
   <section id="faq">
     <div class="wrap" style="max-width:980px">
       <div class="head" style="margin-bottom:36px;display:block">
@@ -557,7 +497,6 @@ console.log(result.output, result.durationSec);</pre>
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact" style="border-bottom:0">
     <div class="wrap">
       <div class="head">
@@ -569,13 +508,13 @@ console.log(result.output, result.durationSec);</pre>
         </div>
       </div>
       <div class="contact">
-        <div class="frame-card lilac">
+        <div class="frame-card lilac" data-tilt>
           <div class="no"><span><b>CH.1</b></span><span>discord</span></div>
           <h3>Discord</h3>
           <p class="handle">Spidey_Moon</p>
           <p>Fastest way to reach me. Send the question and the file you are working on.</p>
         </div>
-        <a class="frame-card sage" href="https://github.com/Anand2k29">
+        <a class="frame-card sage" href="https://github.com/Anand2k29" data-tilt>
           <div class="no"><span><b>CH.2</b></span><span>github</span></div>
           <h3>GitHub</h3>
           <p class="handle">Anand2k29</p>
@@ -595,24 +534,75 @@ console.log(result.output, result.durationSec);</pre>
 </footer>
 
 <script>
-  // Playhead: a ruler at the top of the page that follows scrolling, like a timeline scrubber.
   (function () {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Playhead ruler: follows the scroll position.
     var head = document.getElementById("head");
     var readout = document.getElementById("readout");
-    if (!head || !readout) return;
-    var pad = function (n) { return String(n).padStart(2, "0"); };
-    function update() {
+    function ruler() {
       var max = document.documentElement.scrollHeight - window.innerHeight;
       var p = max > 0 ? window.scrollY / max : 0;
-      var total = 60 * 30; // one minute of frames at 30 fps, mapped onto the page
-      var frame = Math.floor(p * total);
+      var frame = Math.floor(p * 60 * 30);
       var s = Math.floor(frame / 30);
+      var pad = function (n) { return String(n).padStart(2, "0"); };
       head.style.width = (p * 100).toFixed(2) + "%";
       readout.textContent = "00:" + pad(Math.floor(s / 60)) + ":" + pad(s % 60) + ":" + pad(frame % 30);
     }
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    update();
+
+    // Hero cylinder: a slow spin that the reader can pause, and that also follows scrolling.
+    var stage = document.getElementById("stage");
+    var cylinder = document.getElementById("cylinder");
+    var pauseBtn = document.getElementById("pause-btn");
+    var counter = document.getElementById("counter");
+    var paused = reduce;
+    function applyPause() {
+      stage.classList.toggle("paused", paused);
+      pauseBtn.setAttribute("aria-pressed", String(paused));
+      pauseBtn.textContent = paused ? "Play motion" : "Pause motion";
+      if (reduce) cylinder.classList.remove("auto");
+    }
+    pauseBtn.addEventListener("click", function () { paused = !paused; applyPause(); });
+    applyPause();
+
+    function scrolled() {
+      if (reduce) return;
+      var turn = window.scrollY * 0.12;
+      cylinder.style.setProperty("--spin", turn + "deg");
+      var n = (Math.floor(window.scrollY / 180) % 8) + 1;
+      counter.textContent = "FRAME " + String(n).padStart(3, "0");
+    }
+
+    // Video frame tilts in 3D as it comes into view.
+    var reel = document.getElementById("reel");
+    function tilt() {
+      if (reduce) return;
+      var r = reel.getBoundingClientRect();
+      var k = Math.max(-1, Math.min(1, (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight));
+      reel.style.setProperty("--tilt", (k * 10).toFixed(2) + "deg");
+    }
+
+    // Cards tilt toward the pointer.
+    if (!reduce) {
+      document.querySelectorAll("[data-tilt]").forEach(function (card) {
+        card.addEventListener("pointermove", function (e) {
+          var r = card.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width - 0.5;
+          var y = (e.clientY - r.top) / r.height - 0.5;
+          card.style.setProperty("--ry", (x * 8).toFixed(2) + "deg");
+          card.style.setProperty("--rx", (-y * 8).toFixed(2) + "deg");
+        });
+        card.addEventListener("pointerleave", function () {
+          card.style.setProperty("--rx", "0deg");
+          card.style.setProperty("--ry", "0deg");
+        });
+      });
+    }
+
+    function onScroll() { ruler(); scrolled(); tilt(); }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
   })();
 
   // Copy button for the install command.
