@@ -468,10 +468,10 @@ claude mcp add tockmux -- npx -y tockmux mcp
         <div class="frame-card wide sage" data-tilt>
           <div class="no"><span><b>D2</b></span><span>mcp</span></div>
           <h3>Use it as an MCP tool</h3>
-          <p>Ask Claude in plain words. It calls the <code>render_video</code> tool, TockMux renders the file on your computer, and Claude reports the result.</p>
-          <video controls preload="metadata" playsinline style="width:100%;margin-top:18px;border:2px solid var(--ink);background:#000" aria-label="MCP demo: a plain request becomes a rendered video">
-            <source src="demo-mcp.mp4" type="video/mp4">
-            <a href="demo-mcp.mp4">Download the MCP demo (MP4)</a>
+          <p>A real recording of an MCP session. The client starts <code>tockmux mcp</code>, lists the seven tools, checks a page with <code>check_html</code>, then calls <code>render_video</code>, and the server returns the file it made. These are the actual protocol messages, not a mock-up.</p>
+          <video controls preload="metadata" playsinline style="width:100%;margin-top:18px;border:2px solid var(--ink);background:#000" aria-label="Recorded MCP session: tools/list, check_html, then render_video">
+            <source src="demo-mcp-recording.mp4" type="video/mp4">
+            <a href="demo-mcp-recording.mp4">Download the MCP session recording (MP4)</a>
           </video>
         </div>
         <div class="frame-card lilac wide" data-tilt>

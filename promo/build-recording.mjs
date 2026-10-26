@@ -9,6 +9,8 @@ const rec = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
 const out = process.argv[3] || path.join(here, "demo-recording.html");
 const script = fs.readFileSync(path.join(here, "replay-script.js"), "utf8");
 const seconds = Math.ceil(rec.duration) + 2;
+const bar = process.argv[4] || "terminal · recorded from tockmux 4.0.1";
+const caption = process.argv[5] || "Real terminal output · render, then watch";
 
 const page = `<!doctype html>
 <html lang="en">
@@ -40,9 +42,9 @@ const page = `<!doctype html>
 </style>
 </head>
 <body>
-<div class="bar"><i></i><i></i><i></i><span>terminal · recorded from tockmux 4.0.1</span></div>
+<div class="bar"><i></i><i></i><i></i><span>${bar}</span></div>
 <div class="term"><div class="screen" id="screen"></div></div>
-<div class="label">Real terminal output · render, then watch</div>
+<div class="label">${caption}</div>
 <div class="note" id="clock">0.0 s</div>
 <script>
 const CHUNKS = ${JSON.stringify(rec.chunks)};

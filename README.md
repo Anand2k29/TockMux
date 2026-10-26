@@ -357,14 +357,14 @@ assistant can make videos when you ask in plain words.
 
 <div align="center">
 
-<img src="promo/demo-mcp.gif" alt="Demo: a plain request in Claude becomes a rendered video through TockMux's render_video tool" width="640">
+<img src="promo/demo-mcp-recording.gif" alt="Recording of a real MCP session: tools/list, check_html, then render_video" width="640">
 
-**[▶ Watch the MCP demo (10 s, MP4)](https://github.com/Anand2k29/TockMux/blob/main/promo/demo-mcp.mp4)**
+**[▶ Watch the recorded MCP session (MP4, 29 s)](https://github.com/Anand2k29/TockMux/blob/main/promo/demo-mcp-recording.mp4)**
 
 </div>
 
 > [!NOTE]
-> The demo is an animated illustration of the exact tool call and result, rendered by TockMux from HTML.
+> The recording above is a real MCP session: the actual protocol messages between a client and `tockmux mcp`. An AI chat is not part of it.
 
 ```bash
 claude mcp add tockmux -- npx -y tockmux mcp     # Claude Code
