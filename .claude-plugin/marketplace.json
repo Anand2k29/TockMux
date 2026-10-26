@@ -1,0 +1,17 @@
+{
+  "name": "tockmux",
+  "owner": {
+    "name": "Anand2k29",
+    "url": "https://github.com/Anand2k29"
+  },
+  "metadata": {
+    "description": "TockMux plugin marketplace: turn HTML animations into videos from Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "tockmux",
+      "source": "./claude-plugin",
+      "description": "Render HTML animations to MP4, GIF or WebM with /tockmux commands."
+    }
+  ]
+}

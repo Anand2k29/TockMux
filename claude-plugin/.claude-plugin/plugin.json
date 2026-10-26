@@ -1,0 +1,13 @@
+{
+  "name": "tockmux",
+  "version": "4.0.1",
+  "description": "Turn an HTML animation into a frame-perfect MP4, GIF or WebM. Adds /tockmux:render, /tockmux:watch, /tockmux:check, /tockmux:make and /tockmux:setup.",
+  "author": {
+    "name": "Anand2k29",
+    "url": "https://github.com/Anand2k29"
+  },
+  "homepage": "https://github.com/Anand2k29/TockMux",
+  "repository": "https://github.com/Anand2k29/TockMux",
+  "license": "MIT",
+  "keywords": ["video", "html", "mp4", "animation", "ffmpeg"]
+}
