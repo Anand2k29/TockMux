@@ -4,160 +4,219 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TockMux: turn your HTML animation into a real MP4</title>
-<meta name="description" content="TockMux draws your HTML animation one frame at a time on a clock it controls, so the MP4 comes out smooth and identical on every computer. Free, open source, with a terminal, a Studio app and an MCP server for AI assistants.">
-<meta name="theme-color" content="#F4EFE3">
+<meta name="description" content="TockMux draws your HTML animation one frame at a time on a clock it controls, so the MP4 comes out smooth and identical on every computer. Free and open source, with a command line, a Studio app, an MCP server and a Claude Code plugin.">
+<meta name="theme-color" content="#0a0c10">
 <meta property="og:title" content="TockMux: your HTML animation, as a real MP4">
-<meta property="og:description" content="Frame-perfect HTML to MP4, GIF and WebM. Voice-over sync, a watch mode, a drag-and-drop Studio and an MCP server for AI assistants.">
+<meta property="og:description" content="Frame-perfect HTML to MP4, GIF and WebM. Voice-over sync, watch mode, Studio, an MCP server and a Claude Code plugin.">
 <meta property="og:type" content="website">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #F4EFE3;
-    --ink: #161514;
-    --mustard: #E3B95C;
-    --rose: #E59A8A;
-    --sage: #A9C5A0;
-    --slate: #9DB2CC;
-    --lilac: #C9BEDD;
-    --white: #FFFDF7;
-    --display: "Archivo Black", "Archivo", "Arial Black", sans-serif;
-    --body: "Archivo", "Segoe UI", system-ui, sans-serif;
+    --bg: #0a0c10;
+    --bg-2: #0f1218;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-2: rgba(255, 255, 255, 0.07);
+    --line: rgba(255, 255, 255, 0.09);
+    --text: #eef1f6;
+    --muted: #9aa3b2;
+    --sage: #9cc5a1;
+    --sand: #e8d9b5;
+    --coral: #e59a8a;
+    --sky: #9db2cc;
+    --lilac: #c9bedd;
+    --radius: 20px;
+    --sans: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
     --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
-    --border: 3px solid var(--ink);
-    --shadow: 8px 8px 0 var(--ink);
-    --shadow-sm: 4px 4px 0 var(--ink);
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --paper: #1D1C1A; --ink: #F4EFE3; --white: #262523; }
-  }
-  :root[data-theme="dark"] { --paper: #1D1C1A; --ink: #F4EFE3; --white: #262523; }
-
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body); }
-  img, svg { max-width: 100%; }
-  a { color: inherit; font-weight: 700; }
-  :focus-visible { outline: 3px solid var(--mustard); outline-offset: 3px; }
-  .wrap { width: min(1120px, 100% - 32px); margin: 0 auto; }
-  h1, h2, h3 { margin: 0; line-height: 1.05; font-family: var(--display); font-weight: 400; letter-spacing: -.01em; }
-  h1 { font-size: clamp(40px, 7vw, 84px); text-transform: uppercase; }
-  h2 { font-size: clamp(30px, 4.5vw, 52px); text-transform: uppercase; margin-bottom: 18px; }
-  h3 { font-size: 22px; font-family: var(--body); font-weight: 800; margin-bottom: 8px; }
-  h1, h2, .num, .handle { word-spacing: -.08em; letter-spacing: -.01em; }
-  .video { border: var(--border); box-shadow: var(--shadow); background: var(--ink); width: 100%; display: block; }
-  .stats { display: grid; gap: 0; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border: var(--border); box-shadow: var(--shadow); background: var(--white); }
-  .stats > div { padding: 22px 24px; border-right: 3px solid var(--ink); }
-  .stats > div:last-child { border-right: 0; }
-  .stats b { display: block; font-family: var(--display); font-weight: 400; font-size: 34px; text-transform: uppercase; line-height: 1; word-spacing: -.08em; }
-  .stats span { font-size: 15px; }
-  .quote { border: var(--border); box-shadow: var(--shadow); padding: 28px; background: var(--mustard); font-size: 20px; font-weight: 700; line-height: 1.45; }
-  .pill-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  .pill { border: 3px solid var(--ink); background: var(--white); padding: 6px 14px; font-weight: 800; box-shadow: 3px 3px 0 var(--ink); font-size: 15px; }
-  p { margin: 0 0 14px; }
-  code, pre, .mono { font-family: var(--mono); }
-  code { background: var(--white); border: 2px solid var(--ink); padding: 1px 6px; font-size: .92em; }
-  .lede { font-size: clamp(18px, 2vw, 21px); max-width: 38em; }
-  section { padding: 72px 0; border-bottom: var(--border); }
-  .kicker { display: inline-block; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: 13px; border: var(--border); background: var(--white); padding: 4px 10px; box-shadow: var(--shadow-sm); margin-bottom: 22px; }
+  html { scroll-behavior: smooth; color-scheme: dark; }
+  body {
+    margin: 0;
+    font: 400 16px/1.65 var(--sans);
+    color: var(--text);
+    background: var(--bg);
+    background-image:
+      radial-gradient(900px 500px at 85% -10%, rgba(156, 197, 161, 0.13), transparent 60%),
+      radial-gradient(800px 500px at -10% 20%, rgba(157, 178, 204, 0.12), transparent 60%),
+      radial-gradient(700px 500px at 60% 110%, rgba(229, 154, 138, 0.09), transparent 60%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  img, video { max-width: 100%; }
+  :focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; border-radius: 6px; }
+  .wrap { width: min(1160px, 100% - 40px); margin: 0 auto; }
+  h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+  h1 { font-size: clamp(42px, 6.4vw, 76px); font-weight: 800; letter-spacing: -0.035em; }
+  h2 { font-size: clamp(30px, 4vw, 46px); }
+  h3 { font-size: 20px; letter-spacing: -0.01em; margin-bottom: 8px; }
+  p { margin: 0; color: var(--muted); }
+  code, pre { font-family: var(--mono); }
+  code { font-size: 0.9em; color: var(--text); background: var(--surface-2); padding: 2px 7px; border-radius: 7px; }
+  .lede { font-size: clamp(17px, 1.8vw, 20px); color: var(--muted); max-width: 42em; }
+  section { padding: 96px 0; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--sage); margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--sage); border-radius: 2px; }
+  .section-head { max-width: 760px; margin-bottom: 48px; }
+  .section-head p { margin-top: 16px; }
 
   /* top bar */
-  header.top { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: var(--border); }
-  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
-  .brand { font-family: var(--display); font-size: 22px; text-decoration: none; text-transform: uppercase; }
-  .brand span { background: var(--mustard); border: var(--border); padding: 0 6px; margin-left: 4px; }
-  nav.links { display: flex; gap: 18px; flex-wrap: wrap; }
-  nav.links a { text-decoration: none; font-weight: 700; }
-  nav.links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  header.top {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(14px) saturate(140%);
+    background: rgba(10, 12, 16, 0.7);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; text-decoration: none; letter-spacing: -0.02em; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--sage), var(--sky));
+    display: grid; place-items: center;
+  }
+  .brand-mark::after { content: ""; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent var(--bg); margin-left: 3px; }
+  nav.links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); }
+  nav.links a { text-decoration: none; }
+  nav.links a:hover { color: var(--text); }
+  @media (max-width: 880px) { nav.links { display: none; } }
 
   /* buttons */
-  .btn { display: inline-block; font: 800 16px var(--body); text-decoration: none; color: var(--ink); background: var(--mustard); border: var(--border); box-shadow: var(--shadow-sm); padding: 14px 22px; cursor: pointer; transition: transform .08s, box-shadow .08s; }
-  .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-  .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
-  .btn.alt { background: var(--white); }
-  .btn.rose { background: var(--rose); }
-  .btns { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 26px; }
-
-  /* cards */
-  .card { background: var(--white); border: var(--border); box-shadow: var(--shadow); padding: 26px; }
-  .grid { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .tint-sage { background: var(--sage); }
-  .tint-slate { background: var(--slate); }
-  .tint-rose { background: var(--rose); }
-  .tint-lilac { background: var(--lilac); }
-  .tint-mustard { background: var(--mustard); }
-  .num { font-family: var(--display); font-size: 44px; line-height: 1; margin-bottom: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; font: 600 15px var(--sans); text-decoration: none;
+    padding: 13px 22px; border-radius: 999px; border: 1px solid var(--line); color: var(--text);
+    background: var(--surface-2); transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    cursor: pointer;
+  }
+  .btn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.2); background: rgba(255,255,255,.1); }
+  .btn.primary { background: linear-gradient(135deg, var(--sage), var(--sky)); color: #07090c; border-color: transparent; }
+  .btn.primary:hover { background: linear-gradient(135deg, #b2d6b6, #b7c9e0); }
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
 
   /* hero */
-  .hero { padding: 64px 0 80px; border-bottom: var(--border); }
-  .hero-grid { display: grid; gap: 48px; grid-template-columns: 1.1fr .9fr; align-items: center; }
-  .install { margin-top: 28px; background: var(--ink); color: var(--paper); border: var(--border); box-shadow: var(--shadow); padding: 16px 18px; display: flex; gap: 12px; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 15px; }
-  .install button { font: 700 13px var(--mono); background: var(--mustard); color: var(--ink); border: 2px solid var(--paper); padding: 6px 10px; cursor: pointer; flex: none; }
-  .install button:hover { background: var(--rose); }
+  .hero { padding: 84px 0 70px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted);
+    border: 1px solid var(--line); background: var(--surface); padding: 6px 14px 6px 8px; border-radius: 999px;
+  }
+  .pill b { color: #07090c; background: var(--sage); padding: 2px 9px; border-radius: 999px; font-size: 12px; }
+  .hero h1 { margin-top: 22px; }
+  .hero h1 .grad { background: linear-gradient(100deg, var(--sage), var(--sky) 55%, var(--lilac)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .lede { margin-top: 22px; }
+  .cmd {
+    margin-top: 30px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding: 14px 16px 14px 20px; border-radius: 16px; background: #05070a; border: 1px solid var(--line);
+    font-family: var(--mono); font-size: 15px; color: var(--text);
+  }
+  .cmd .prompt { color: var(--sage); margin-right: 10px; }
+  .copy {
+    font: 600 12px var(--sans); color: var(--muted); background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 9px; padding: 7px 12px; cursor: pointer; flex: none;
+  }
+  .copy:hover { color: var(--text); }
   .note { font-size: 14px; margin-top: 14px; }
 
-  /* terminal demo */
-  .term { background: #161514; color: #F4EFE3; border: var(--border); box-shadow: var(--shadow); font: 15px/1.7 var(--mono); }
-  .term-bar { display: flex; gap: 8px; padding: 10px 14px; border-bottom: 2px solid #F4EFE3; background: #2A2926; }
-  .term-bar i { width: 13px; height: 13px; border: 2px solid #F4EFE3; border-radius: 50%; display: inline-block; }
-  .term-bar i:nth-child(1) { background: var(--rose); }
-  .term-bar i:nth-child(2) { background: var(--mustard); }
-  .term-bar i:nth-child(3) { background: var(--sage); }
-  .term-body { padding: 18px 20px; min-height: 260px; white-space: pre-wrap; }
-  .term-body .ok { color: var(--sage); }
-  .term-body .dim { color: #9C9890; }
-  .bar { color: var(--mustard); }
-  .caret { display: inline-block; width: .6em; height: 1.1em; background: var(--mustard); vertical-align: -.2em; animation: blink 1s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-  .fill { animation: fillbar 6s steps(12) infinite; }
-  @keyframes fillbar { from { opacity: 1; } to { opacity: 1; } }
+  /* video frame */
+  .screen {
+    border-radius: 24px; padding: 10px; background: linear-gradient(160deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+    border: 1px solid var(--line); box-shadow: 0 40px 120px -30px rgba(156, 197, 161, .25);
+  }
+  .screen video { display: block; width: 100%; border-radius: 16px; background: #000; }
+  .screen-caption { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 12px 6px 4px; }
+
+  /* cards and bento */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+  .card {
+    grid-column: span 2; position: relative; overflow: hidden;
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 28px;
+  }
+  .card.wide { grid-column: span 4; }
+  .card.tall { grid-column: span 2; }
+  .card .icon {
+    width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 18px;
+    font-size: 20px; background: rgba(156, 197, 161, .14); border: 1px solid rgba(156, 197, 161, .25);
+  }
+  .card.sky .icon { background: rgba(157, 178, 204, .14); border-color: rgba(157, 178, 204, .25); }
+  .card.sand .icon { background: rgba(232, 217, 181, .12); border-color: rgba(232, 217, 181, .25); }
+  .card.coral .icon { background: rgba(229, 154, 138, .12); border-color: rgba(229, 154, 138, .25); }
+  .card.lilac .icon { background: rgba(201, 190, 221, .12); border-color: rgba(201, 190, 221, .25); }
+  .card p { font-size: 15px; }
+  .card pre { margin: 16px 0 0; padding: 14px 16px; border-radius: 14px; background: #05070a; border: 1px solid var(--line); color: var(--text); font-size: 13.5px; overflow-x: auto; }
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: 1fr 1fr; }
+    .card, .card.wide, .card.tall { grid-column: span 2; }
+  }
+  @media (max-width: 600px) {
+    .bento { grid-template-columns: 1fr; }
+    .card, .card.wide, .card.tall { grid-column: span 1; }
+  }
+
+  /* stats */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+  .stats > div { padding: 28px 24px; border-right: 1px solid var(--line); }
+  .stats > div:last-child { border-right: 0; }
+  .stats b { display: block; font-size: 30px; letter-spacing: -0.02em; color: var(--text); }
+  .stats span { font-size: 14px; color: var(--muted); }
+  @media (max-width: 760px) { .stats { grid-template-columns: 1fr 1fr; } .stats > div:nth-child(2) { border-right: 0; } .stats > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); } }
 
   /* steps */
-  .steps { counter-reset: s; display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .step { position: relative; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
+  .step { padding: 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
+  .step .n { font-family: var(--mono); font-size: 13px; color: var(--sage); margin-bottom: 14px; }
+  @media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
 
-  /* compare table */
-  .table-wrap { overflow-x: auto; border: var(--border); box-shadow: var(--shadow); background: var(--white); }
-  table { width: 100%; border-collapse: collapse; font-size: 16px; min-width: 620px; }
-  th, td { text-align: left; padding: 14px 16px; border-bottom: 2px solid var(--ink); vertical-align: top; }
-  th { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 15px; background: var(--mustard); border-bottom: var(--border); }
-  th:first-child, td:first-child { font-weight: 800; }
+  /* table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 620px; }
+  th, td { text-align: left; padding: 15px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; background: rgba(255,255,255,.02); }
+  td:first-child { color: var(--text); font-weight: 600; }
   tr:last-child td { border-bottom: 0; }
+  td .yes { color: var(--sage); font-weight: 700; }
 
   /* code blocks */
-  pre.code { background: var(--ink); color: var(--paper); border: var(--border); box-shadow: var(--shadow); padding: 20px; overflow-x: auto; font: 14px/1.6 var(--mono); margin: 0; }
-  .split { display: grid; gap: 36px; grid-template-columns: 1fr 1fr; align-items: start; }
+  .code-block { border-radius: var(--radius); background: #05070a; border: 1px solid var(--line); overflow: hidden; }
+  .code-block .bar { display: flex; gap: 7px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .code-block .bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.14); }
+  .code-block pre { margin: 0; padding: 20px; font-size: 14px; line-height: 1.7; overflow-x: auto; color: var(--text); }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
 
   /* faq */
-  details { background: var(--white); border: var(--border); box-shadow: var(--shadow-sm); padding: 16px 20px; margin-bottom: 18px; }
-  summary { font-weight: 800; cursor: pointer; font-size: 18px; }
-  details p { margin-top: 12px; }
+  .faq details { border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 18px 22px; margin-bottom: 12px; }
+  .faq summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .faq summary::after { content: "+"; color: var(--sage); font-size: 22px; line-height: 1; }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { margin-top: 12px; }
 
   /* contact */
-  .contact { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .contact .card { display: flex; flex-direction: column; gap: 10px; }
-  .handle { font-family: var(--display); font-size: 26px; text-transform: none; }
+  .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 700px) { .contact { grid-template-columns: 1fr; } }
+  .contact a.card { text-decoration: none; display: block; }
+  .contact a.card:hover { border-color: rgba(255,255,255,.2); }
+  .handle { font-size: 22px; font-weight: 700; color: var(--text); margin-top: 6px; }
 
-  footer { padding: 40px 0 56px; }
+  footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--muted); }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--text); }
 
-  /* motion */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  }
-
-  /* phones */
-  @media (max-width: 860px) {
-    .hero-grid, .split { grid-template-columns: 1fr; }
-    nav.links { display: none; }
-    section { padding: 52px 0; }
-    .hero { padding: 40px 0 56px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    section { padding: 72px 0; }
+    .hero { padding: 56px 0 48px; }
   }
   @media (max-width: 420px) {
-    .install { flex-direction: column; align-items: stretch; font-size: 13px; }
-    .btn { width: 100%; text-align: center; }
+    .cmd { flex-direction: column; align-items: stretch; font-size: 13px; }
+    .btn { width: 100%; justify-content: center; }
   }
 </style>
 </head>
@@ -165,13 +224,13 @@
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#top">TockMux<span>4</span></a>
+    <a class="brand" href="#top"><span class="brand-mark"></span>TockMux</a>
     <nav class="links" aria-label="Sections">
-      <a href="#guide">Guide</a>
-      <a href="#how">How it works</a>
+      <a href="#why">Why</a>
       <a href="#features">Features</a>
-      <a href="#ai">For AI</a>
       <a href="#start">Get started</a>
+      <a href="#limits">Limits</a>
+      <a href="#ai">AI and plugin</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -180,407 +239,348 @@
 
 <main id="top">
 
-<div class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="kicker">Free and open source</span>
-      <h1>Your HTML animation, as a real MP4.</h1>
-      <p class="lede" style="margin-top:22px">TockMux takes a web page that moves by itself and records it frame by frame, on a clock it controls. The video comes out smooth, the exact size you asked for, and the same on every computer. No screen recorder, no dropped frames.</p>
-      <div class="install" role="group" aria-label="Install command">
-        <code id="install-cmd" style="background:none;border:0;padding:0;color:inherit">npm install -g tockmux</code>
-        <button type="button" id="copy-btn">COPY</button>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><b>v4.0.1</b> Free and open source, MIT</span>
+        <h1>Your HTML animation, <span class="grad">as a real MP4.</span></h1>
+        <p class="lede">TockMux takes a page that moves by itself and records it frame by frame, on a clock it controls. The video is smooth, the exact size you asked for, and identical on every computer. No screen recording, no dropped frames.</p>
+
+        <div class="cmd" role="group" aria-label="Install command">
+          <span><span class="prompt">$</span><span id="install-cmd">npm install -g tockmux</span></span>
+          <button type="button" class="copy" id="copy-btn">Copy</button>
+        </div>
+        <p class="note">Needs Node.js 20 or newer. Then run <code>tockmux setup</code> once to get the browser.</p>
+
+        <div class="btns">
+          <a class="btn primary" href="#start">Get started</a>
+          <a class="btn" href="#video">Watch the film</a>
+        </div>
       </div>
-      <p class="note">Needs Node.js 18 or newer. Then run <code>tockmux setup</code> once. Version 4.0.0 is live on npm.</p>
-      <div class="btns">
-        <a class="btn" href="#start">Get started</a>
-        <a class="btn alt" href="#how">See how it works</a>
+
+      <div>
+        <div class="screen">
+          <video controls preload="metadata" playsinline aria-label="TockMux launch film">
+            <source src="promo.mp4" type="video/mp4">
+            Your browser cannot play this video. <a href="promo.mp4">Download the MP4</a>.
+          </video>
+          <div class="screen-caption"><span>TockMux launch film</span><span>30 s · 1920×1080</span></div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="term" aria-label="Example terminal session">
-      <div class="term-bar"><i></i><i></i><i></i></div>
-      <div class="term-body"><span class="dim">$</span> tockmux render promo.html --preset tiktok
-<span class="ok">+</span> Read promo.html <span class="dim">(HTML page)</span>
-<span class="ok">+</span> Length 12s, 360 frames
-<span class="bar">████████████████░░░░</span>  80%  <span class="dim">frame 288/360  68.4 fps</span>
-<span class="ok">+</span> Video ready  <span class="dim">promo.mp4  1080x1920  30 fps  12s</span>
-<span class="dim">$</span> tockmux watch promo.html
-<span class="ok">+</span> Watching promo.html <span class="dim">save the file to render</span>
-<span class="caret"></span></div>
+  <!-- Stats -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="stats">
+        <div><b>Same every run</b><span>Seeded randomness and a virtual clock.</span></div>
+        <div><b>Up to 1 hour</b><span>Set the length with <code>--duration</code>.</span></div>
+        <div><b>MP4 · GIF · WebM</b><span>Sound in MP4. Loops in GIF.</span></div>
+        <div><b>6 ways in</b><span>Menu, CLI, Studio, library, MCP and Claude Code.</span></div>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
 
-<section id="video" style="padding-top:56px">
-  <div class="wrap">
-    <span class="kicker">Watch it</span>
-    <h2>The 30-second launch film.</h2>
-    <p class="lede">This film was rendered by TockMux itself, from a plain HTML page with CSS animations. Nothing was recorded from a screen.</p>
-    <div style="margin-top:32px">
-      <video class="video" controls preload="metadata" poster="" playsinline aria-label="TockMux promo video">
-        <source src="promo.mp4" type="video/mp4">
-        Your browser cannot play this video. <a href="promo.mp4">Download the MP4</a>.
-      </video>
+  <!-- Why -->
+  <section id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Why it matters</span>
+        <h2>Stop recording your screen.</h2>
+        <p class="lede">Animated pages are easy to make now, and hard to post. A screen recording stutters, changes every time and comes out the wrong size. TockMux removes that step.</p>
+      </div>
+      <div class="bento">
+        <div class="card sage"><div class="icon">🎯</div><h3>Repeatable</h3><p>Re-render and get the same frames, on any computer.</p></div>
+        <div class="card sky"><div class="icon">📐</div><h3>Exact sizes</h3><p>TikTok, YouTube, square, 4K, or your own size.</p></div>
+        <div class="card sand"><div class="icon">🎙️</div><h3>Voice that fits</h3><p>The animation stretches to match your narration.</p></div>
+        <div class="card coral"><div class="icon">⚡</div><h3>One command</h3><p>From an HTML file to a video, with no editor open.</p></div>
+        <div class="card lilac wide"><div class="icon">🤝</div><h3>For creators, developers and teams</h3><p>Creators turn one animation into many posts. Developers render inside a build or CI job with one <code>convert()</code> call. Teams share one source file and re-render when the copy changes.</p></div>
+      </div>
     </div>
-    <p class="note" style="margin-top:14px">Made with <code>tockmux render promo.html</code>. The source is in the <code>promo/</code> folder.</p>
-  </div>
-</section>
+  </section>
 
-<section id="why">
-  <div class="wrap">
-    <span class="kicker">Why it is useful</span>
-    <h2>Stop recording your screen.</h2>
-    <p class="lede">Most people who make animated web pages end up pointing a screen recorder at them. It works once. Then the video stutters, the size is wrong, and the next take never matches the last. TockMux removes that whole step.</p>
-    <div class="stats" style="margin-top:36px">
-      <div><b>Same every run</b><span>Seeded randomness and a virtual clock. Re-render and get the same frames.</span></div>
-      <div><b>Exact size</b><span>1080x1920, 1920x1080, square, 4K. Chosen by you, not by your window.</span></div>
-      <div><b>One command</b><span>From an HTML file to an MP4, GIF or WebM, with no editor open.</span></div>
-      <div><b>Voice fitted</b><span>The animation stretches to match your narration.</span></div>
+  <!-- Video -->
+  <section id="video">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Made with TockMux</span>
+        <h2>Watch the film.</h2>
+        <p class="lede" style="margin-top:16px">This film was rendered by TockMux itself, from a plain HTML page with CSS and JavaScript animation. Nothing was recorded from a screen.</p>
+        <div class="btns">
+          <a class="btn" href="promo.mp4" download>Download the MP4</a>
+          <a class="btn" href="https://github.com/Anand2k29/TockMux">View on GitHub</a>
+        </div>
+      </div>
+      <div class="code-block">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre>tockmux render promo.html
+<span style="color:var(--sage)">+</span> Read promo.html   1920x1080  30 fps
+<span style="color:var(--sage)">+</span> Video ready      promo.mp4   30 s</pre>
+      </div>
     </div>
-    <div class="grid" style="margin-top:36px">
-      <div class="card tint-sage"><h3>For creators</h3><p>Turn one AI-made animation into a TikTok, a YouTube cut, an Instagram square and a poster, without touching a video editor.</p></div>
-      <div class="card tint-lilac"><h3>For developers</h3><p>Render videos inside a build script or CI job with one <code>convert()</code> call. Same output, so tests can check it.</p></div>
-      <div class="card tint-slate"><h3>For teams</h3><p>Product, docs and marketing can share one source file. Re-render when the copy changes, in seconds.</p></div>
-      <div class="card tint-mustard"><h3>For AI users</h3><p>Ask your assistant for a video in plain words. It checks the page, looks at a frame and renders the MP4 through MCP.</p></div>
-    </div>
-    <div class="quote" style="margin-top:36px">Make the video once. Make it again tomorrow, on another computer, and get the same frames.</div>
-  </div>
-</section>
+  </section>
 
-<section id="ready">
-  <div class="wrap">
-    <span class="kicker">Ready when you are</span>
-    <h2>What you get on day one.</h2>
-    <div class="grid" style="margin-top:36px">
-      <div class="card"><h3>1. A command line</h3><p><code>render</code>, <code>watch</code>, <code>batch</code>, <code>check</code>, <code>frame</code>, <code>sync</code>, <code>probe</code>. Coloured output, a live progress bar and a plain-English error for every problem.</p></div>
-      <div class="card"><h3>2. A library</h3><p>Import <code>convert()</code> into your own Node.js code. It returns the output path, duration, size and any warnings.</p></div>
-      <div class="card"><h3>3. A visual app</h3><p><code>tockmux studio</code> opens a drag-and-drop page on your own computer with live preview and a download button.</p></div>
-      <div class="card"><h3>4. An AI bridge</h3><p><code>tockmux mcp</code> gives Claude Desktop, Claude Code and Cursor seven tools, including check, frame preview and render.</p></div>
-      <div class="card"><h3>5. A tiny language</h3><p>The <code>.tmx</code> format writes title films in a few lines, with themes, transitions and counters.</p></div>
-      <div class="card"><h3>6. Optional narration</h3><p>ElevenLabs voice-over with several accounts and automatic failover, keys kept private on your machine.</p></div>
+  <!-- How it works -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Take control of time.</h2>
+        <p class="lede">A page only looks different from run to run because it reads the clock. TockMux replaces every clock the page can see before it loads. Time moves only when TockMux says so.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Replace the clock</h3><p>Timers, animation frames, <code>Date</code>, <code>performance.now()</code>, CSS animations and <code>Math.random</code> all wait for TockMux.</p></div>
+        <div class="step"><div class="n">02</div><h3>Advance one frame</h3><p>For each frame, the clock moves by exactly 1/30 of a second and the page reacts in order.</p></div>
+        <div class="step"><div class="n">03</div><h3>Capture and encode</h3><p>Each picture goes to FFmpeg. Long videos render in parallel and join without re-encoding.</p></div>
+      </div>
     </div>
-    <div class="pill-row">
-      <span class="pill">MP4</span><span class="pill">GIF</span><span class="pill">WebM</span><span class="pill">Windows</span><span class="pill">macOS</span><span class="pill">Linux</span><span class="pill">MIT licence</span><span class="pill">Node 18+</span>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section id="privacy">
-  <div class="wrap split">
-    <div>
-      <span class="kicker">Privacy and safety</span>
-      <h2>Your files stay yours.</h2>
-      <p class="lede">TockMux renders on your computer. It does not upload your pages, your videos or your analytics anywhere.</p>
+  <!-- Features -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Features</span>
+        <h2>Everything you need, nothing you don't.</h2>
+      </div>
+      <div class="bento">
+        <div class="card sage wide"><div class="icon">🖥️</div><h3>A numbered menu</h3><p>Type <code>tockmux</code> and pick a number: render a file, paste HTML, try a sample, watch a file, check it, or open Studio. No commands to learn.</p></div>
+        <div class="card sky"><div class="icon">👀</div><h3>Watch mode</h3><p><code>tockmux watch</code> re-renders each time you save.</p></div>
+        <div class="card sand"><div class="icon">🔍</div><h3>Check first</h3><p><code>tockmux check</code> tells you if a page will be a still image, or needs a click, before a long render.</p></div>
+        <div class="card coral"><div class="icon">📦</div><h3>Batch a folder</h3><p><code>tockmux batch ./slides --out-dir ./videos</code> renders a whole set.</p></div>
+        <div class="card lilac"><div class="icon">🎞️</div><h3>Title films</h3><p>Write a short <code>.tmx</code> script with titles, counters and bars, and no HTML at all.</p></div>
+        <div class="card sage"><div class="icon">🧠</div><h3>Plain-English errors</h3><p>Every problem comes with a line number and a fix. <code>tockmux doctor</code> checks your setup.</p></div>
+      </div>
     </div>
-    <div style="display:grid;gap:16px">
-      <div class="card"><h3>Local by default</h3><p>Rendering, checking and watching happen on your machine. No account is needed.</p></div>
-      <div class="card"><h3>Studio and MCP stay in your folder</h3><p>The Studio listens only on 127.0.0.1 and rejects other host names. The MCP server cannot read or write outside the folder you start it in.</p></div>
-      <div class="card"><h3>Your keys, your file</h3><p>ElevenLabs keys are kept in <code>~/.tockmux/voice.json</code> with owner-only permissions, never in your project.</p></div>
+  </section>
+
+  <!-- Compare -->
+  <section id="compare">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Compared</span>
+        <h2>Where TockMux fits.</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>You want</th><th>Screen recording</th><th>Video frameworks</th><th>TockMux</th></tr></thead>
+          <tbody>
+            <tr><td>Same output every run</td><td>No</td><td>Yes</td><td class="yes">Yes</td></tr>
+            <tr><td>Use the HTML you already have</td><td>Yes</td><td>Varies by tool</td><td class="yes">Yes, as it is</td></tr>
+            <tr><td>Voice-over stretches the animation</td><td>No</td><td>Varies</td><td class="yes">Yes, <code>--auto-fit</code></td></tr>
+            <tr><td>Terminal, app and AI assistant</td><td>No</td><td>Varies</td><td class="yes">All three</td></tr>
+            <tr><td>Setup for a beginner</td><td>Easy but fragile</td><td>Developer setup</td><td class="yes">Menu, <code>setup</code>, <code>doctor</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:14px">Other tools exist, and some are very good. TockMux aims to be the simplest path from the HTML you already have to a finished video.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="problem">
-  <div class="wrap">
-    <span class="kicker">The problem</span>
-    <h2>A web page is not a video.</h2>
-    <p class="lede">An AI tool can write a beautiful animated page in a minute. But you cannot post that page to TikTok, drop it into a slide deck, or send it to a client who expects an MP4. The usual fix is a screen recording, and it breaks in four ways.</p>
-    <div class="grid" style="margin-top:36px">
-      <div class="card tint-rose"><div class="num">01</div><h3>It stutters</h3><p>The browser moves on the wall clock. If the computer is busy for a moment, the recorder keeps whatever was on screen.</p></div>
-      <div class="card tint-slate"><div class="num">02</div><h3>It changes</h3><p>Two recordings of the same page are never identical, so you cannot repeat a good take.</p></div>
-      <div class="card tint-sage"><div class="num">03</div><h3>It is the wrong size</h3><p>The result depends on your window, your screen and your zoom level.</p></div>
-      <div class="card tint-mustard"><div class="num">04</div><h3>The voice is out of sync</h3><p>You export a silent video and then line up the narration by hand in an editor.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="how">
-  <div class="wrap">
-    <span class="kicker">How it works</span>
-    <h2>Take control of time.</h2>
-    <p class="lede">A page can only look different from run to run because it reads the clock. TockMux replaces every clock the page can see before the page loads. Time then moves only when TockMux says so.</p>
-    <div class="steps" style="margin-top:40px">
-      <div class="card step"><div class="num">1</div><h3>Replace the clock</h3><p>Timers, animation frames, <code>Date</code>, <code>performance.now()</code>, CSS animations and <code>Math.random</code> (seeded) all wait for TockMux.</p></div>
-      <div class="card step"><div class="num">2</div><h3>Advance one frame</h3><p>For every frame, the clock moves by exactly 1/30 of a second and the page reacts in order.</p></div>
-      <div class="card step"><div class="num">3</div><h3>Capture and encode</h3><p>TockMux takes the picture through the browser's debugging protocol and pipes it into FFmpeg. Long videos render in parallel and are joined without re-encoding.</p></div>
-    </div>
-    <p style="margin-top:32px"><b>The result:</b> a slow computer takes longer, but the frames are the same. The test suite checks this to the pixel.</p>
-  </div>
-</section>
-
-<section id="features">
-  <div class="wrap">
-    <span class="kicker">Features</span>
-    <h2>Everything you need, nothing you do not.</h2>
-    <div class="grid" style="margin-top:36px">
-      <div class="card"><h3>Bring the HTML you have</h3><p>Plain CSS, <code>requestAnimationFrame</code>, GSAP, anime.js, Lottie, canvas and SVG render as they are. No framework to adopt.</p></div>
-      <div class="card"><h3>Voice-over that fits</h3><p><code>--auto-fit</code> stretches the animation itself to the length of your narration. Music can loop, fade and duck under speech.</p></div>
-      <div class="card"><h3>Watch mode</h3><p><code>tockmux watch</code> re-renders the video every time you save the file, so you see each change in seconds.</p></div>
-      <div class="card"><h3>Check before you wait</h3><p><code>tockmux check</code> opens the page and tells you whether it will be a still image, cropped, or missing an image, before a long render starts.</p></div>
-      <div class="card"><h3>Batch a whole folder</h3><p><code>tockmux batch ./slides --out-dir ./videos</code> renders 40 scenes while you make coffee.</p></div>
-      <div class="card"><h3>Studio, drag and drop</h3><p><code>tockmux studio</code> opens a small app in your browser with live preview, progress and a download button.</p></div>
-      <div class="card"><h3>A tiny language for titles</h3><p>Write a short <code>.tmx</code> script for a film made of titles, counters and bars, with themes and transitions, and no HTML at all.</p></div>
-      <div class="card"><h3>Plain-English errors</h3><p>Every problem comes with a line number and a fix. <code>tockmux doctor</code> checks your setup and says exactly what to install.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="compare">
-  <div class="wrap">
-    <span class="kicker">Compared</span>
-    <h2>Where TockMux fits.</h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>You want</th><th>Screen recording</th><th>Video framework</th><th>TockMux</th></tr></thead>
-        <tbody>
-          <tr><td>Same output every run</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-          <tr><td>Use the HTML you already have</td><td>Yes</td><td>Varies by tool</td><td>Yes, as it is</td></tr>
-          <tr><td>Voice-over stretches the animation</td><td>No</td><td>Varies</td><td>Yes (<code>--auto-fit</code>)</td></tr>
-          <tr><td>Works from a terminal, an app or an AI assistant</td><td>No</td><td>Varies by tool</td><td>All three</td></tr>
-          <tr><td>Setup for a non-expert</td><td>Easy but fragile</td><td>Developer setup</td><td><code>setup</code> and <code>doctor</code></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="note" style="margin-top:16px">Other tools exist and some are very good. TockMux aims to be the simplest path from the HTML you already have to a finished video.</p>
-  </div>
-</section>
-
-<section id="use">
-  <div class="wrap split">
-    <div>
-      <span class="kicker">Use cases</span>
-      <h2>Made for people who post.</h2>
-      <p class="lede">Turn one animation into a TikTok, a YouTube cut, an Instagram square, a GIF for a readme and a poster frame for your thumbnail, all from one file.</p>
-      <div class="btns"><a class="btn rose" href="#start">Get started</a></div>
-    </div>
-    <div style="display:grid;gap:16px">
-      <div class="card tint-sage"><h3>Social clips</h3><p>Vertical 1080x1920 for TikTok, Shorts and Reels with <code>--preset tiktok</code>.</p></div>
-      <div class="card tint-lilac"><h3>Narrated explainers</h3><p>Add a voice-over and let the animation follow it.</p></div>
-      <div class="card tint-slate"><h3>Slides and decks</h3><p>Export a slide animation as an MP4 to drop into any presentation.</p></div>
-      <div class="card tint-mustard"><h3>Product and docs GIFs</h3><p>A short looping GIF for a readme or a changelog, at a size you choose.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="ai">
-  <div class="wrap split">
-    <div>
-      <span class="kicker">For AI assistants</span>
-      <h2>Let your assistant make the video.</h2>
-      <p class="lede">TockMux includes a Model Context Protocol (MCP) server. Claude Desktop, Claude Code, Cursor and other assistants can check a page, preview a frame as an image and render the final MP4, while you watch.</p>
-      <p>The assistant can only read and write inside the folder you start it in.</p>
-    </div>
-    <pre class="code"><span style="color:#E3B95C"># Claude Code</span>
-claude mcp add tockmux -- npx -y tockmux mcp
-
-<span style="color:#E3B95C"># Claude Desktop or Cursor: print the JSON config</span>
-tockmux mcp --print-config</pre>
-  </div>
-</section>
-
-<section id="library">
-  <div class="wrap split">
-    <div>
-      <span class="kicker">For developers</span>
-      <h2>Use it as a library.</h2>
-      <p class="lede">The same engine that powers the command line is one import away, so your build scripts and apps can render videos too.</p>
-    </div>
-    <pre class="code">import { convert } from "tockmux";
-
-const result = await convert({
-  input: "promo.html",
-  flags: { output: "promo.mp4", preset: "tiktok" }
-});
-console.log(result.output, result.durationSec);</pre>
-  </div>
-</section>
-
-<section id="start">
-  <div class="wrap">
-    <span class="kicker">Get started</span>
-    <h2>Three commands.</h2>
-    <div class="steps">
-      <div class="card tint-mustard step"><div class="num">1</div><h3>Install</h3><pre class="code" style="box-shadow:none;font-size:15px">npm install -g tockmux</pre></div>
-      <div class="card tint-sage step"><div class="num">2</div><h3>Set up once</h3><pre class="code" style="box-shadow:none;font-size:15px">tockmux setup</pre><p class="note" style="margin-top:10px">Skipped if you already have Chrome or Edge.</p></div>
-      <div class="card tint-rose step"><div class="num">3</div><h3>Render</h3><pre class="code" style="box-shadow:none;font-size:15px">tockmux render my.html
+  <!-- Start -->
+  <section id="start">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Get started</span>
+        <h2>Three steps.</h2>
+        <p class="lede">Or type <code>tockmux</code> on its own and pick a number from the menu.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01 · INSTALL</div><h3>Install</h3><pre class="code-block" style="padding:14px 16px;margin-top:14px;font-family:var(--mono);font-size:14px;color:var(--text)">npm install -g tockmux</pre></div>
+        <div class="step"><div class="n">02 · SET UP ONCE</div><h3>Set up</h3><pre class="code-block" style="padding:14px 16px;margin-top:14px;font-family:var(--mono);font-size:14px;color:var(--text)">tockmux setup</pre><p class="note" style="margin-top:12px">Skipped if you already have Chrome or Edge.</p></div>
+        <div class="step"><div class="n">03 · RENDER</div><h3>Render</h3><pre class="code-block" style="padding:14px 16px;margin-top:14px;font-family:var(--mono);font-size:14px;color:var(--text)">tockmux render my.html
 tockmux watch my.html</pre></div>
+      </div>
     </div>
-    <p style="margin-top:30px">No file yet? Run <code>tockmux init my-video</code> for a starter project, or <code>tockmux demo</code> to see a finished video first.</p>
-    <div class="btns"><a class="btn" href="#faq">Common questions</a><a class="btn alt" href="https://github.com/Anand2k29" rel="noopener">GitHub: Anand2k29</a></div>
-  </div>
-</section>
+  </section>
 
-<section id="guide">
-  <div class="wrap">
-    <span class="kicker">How to use it</span>
-    <h2>A short guide.</h2>
-    <p class="lede">Easiest start: type <code>tockmux</code> and pick a number from the menu. The steps below show the same things as commands. Every command has <code>--help</code>.</p>
-
-    <div class="steps" style="margin-top:36px">
-      <div class="card tint-mustard step"><div class="num">1</div><h3>Install and set up</h3>
-        <pre class="code" style="box-shadow:none;font-size:15px">npm install -g tockmux
-tockmux setup
-tockmux doctor</pre>
-        <p class="note" style="margin-top:10px"><code>setup</code> downloads a browser once. <code>doctor</code> checks everything and tells you what is missing.</p></div>
-      <div class="card tint-sage step"><div class="num">2</div><h3>Make a video</h3>
-        <pre class="code" style="box-shadow:none;font-size:15px">tockmux render my.html
-tockmux render my.html --preset tiktok
-tockmux render my.html --format gif</pre>
-        <p class="note" style="margin-top:10px">Sizes: youtube, tiktok, square, portrait, cinema, 4k. Run <code>tockmux presets</code> for all of them.</p></div>
-      <div class="card tint-rose step"><div class="num">3</div><h3>Check and iterate</h3>
-        <pre class="code" style="box-shadow:none;font-size:15px">tockmux check my.html
-tockmux watch my.html</pre>
-        <p class="note" style="margin-top:10px"><code>check</code> warns about problems before a long render. <code>watch</code> re-renders every time you save.</p></div>
-      <div class="card tint-lilac step"><div class="num">4</div><h3>Add a voice-over</h3>
-        <pre class="code" style="box-shadow:none;font-size:15px">tockmux render my.html --voice narration.mp3 --auto-fit
-tockmux voice add --name main</pre>
-        <p class="note" style="margin-top:10px"><code>--auto-fit</code> stretches the animation to the narration. ElevenLabs keys stay on your computer.</p></div>
-      <div class="card tint-slate step"><div class="num">5</div><h3>Use it your way</h3>
-        <pre class="code" style="box-shadow:none;font-size:15px">tockmux studio
-tockmux batch ./slides --out-dir ./videos
-tockmux mcp --print-config</pre>
-        <p class="note" style="margin-top:10px">Studio is a drag-and-drop app. Batch renders a folder. MCP lets an AI assistant make videos for you.</p></div>
-    </div>
-
-    <h3 style="margin-top:44px;font-size:28px;text-transform:uppercase;font-family:var(--display);font-weight:400">Your first HTML page</h3>
-    <p style="margin-top:12px">TockMux works with any page that moves by itself. Start with this, save it as <code>my.html</code>, and render it:</p>
-    <pre class="code" style="margin-top:18px">&lt;!doctype html&gt;
+  <!-- Guide -->
+  <section id="guide">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Your first page</span>
+        <h2>Save this as my.html, then render it.</h2>
+        <p class="lede">A six-second video with a square sliding across the screen.</p>
+      </div>
+      <div class="code-block">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre>&lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;meta name="html2mp4:duration" content="6"&gt;
   &lt;style&gt;
     body { margin: 0; background: #F4EFE3; }
-    .box { width: 200px; height: 200px; background: #E3B95C; border: 6px solid #161514;
-           position: absolute; top: 400px; left: 0;
+    .box { position: absolute; top: 400px; left: 0; width: 200px; height: 200px;
+           background: #E3B95C; border: 6px solid #161514;
            animation: move 6s linear infinite; }
     @keyframes move { to { left: 1520px; } }
   &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;&lt;div class="box"&gt;&lt;/div&gt;&lt;/body&gt;
 &lt;/html&gt;</pre>
-    <p class="note" style="margin-top:14px">Run <code>tockmux render my.html</code>. You get a six-second MP4 with the square sliding across the screen.</p>
+      </div>
+      <div class="btns">
+        <a class="btn" href="https://www.npmjs.com/package/tockmux">Full guide on npm</a>
+        <a class="btn" href="#limits">Read the limits</a>
+      </div>
+    </div>
+  </section>
 
-    <h3 style="margin-top:44px;font-size:28px;text-transform:uppercase;font-family:var(--display);font-weight:400">Use it from code</h3>
-    <pre class="code" style="margin-top:18px">import { convert } from "tockmux";
+  <!-- Limits -->
+  <section id="limits">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What you can make</span>
+        <h2>Files, lengths and limits.</h2>
+        <p class="lede">TockMux is precise about what it accepts, so you know before you start.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>File</th><th>What it is for</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>.html</code>, <code>.htm</code></td><td>A page that moves by itself</td><td>The main input. CSS, JavaScript, canvas, SVG, GSAP and Lottie all work.</td></tr>
+            <tr><td><code>.tmx</code></td><td>A title film written as a script</td><td>No HTML needed.</td></tr>
+            <tr><td><code>.mp4</code></td><td>An existing video, for <code>sync</code></td><td>Add a voice-over or music to it.</td></tr>
+            <tr><td><code>.mp3</code> and other audio</td><td>Voice-over or music</td><td>MP3 is the format that is tested.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:14px">Anything else, such as <code>.txt</code>, <code>.pdf</code>, <code>.docx</code>, or a lone <code>.png</code> or <code>.jpg</code>, is refused. Images and fonts a page uses are fine.</p>
+
+      <div class="bento" style="margin-top:44px">
+        <div class="card sage"><div class="icon">⏱️</div><h3>How long</h3><p>Up to <b>one hour</b>. Without a length, the video is 10 seconds. Set it with <code>--duration 20</code> or a meta tag.</p></div>
+        <div class="card sky"><div class="icon">🕒</div><h3>Render time</h3><p>A 30-second 1280×720 film takes about 40 to 50 seconds on a normal computer.</p></div>
+        <div class="card sand"><div class="icon">🎞️</div><h3>MP4, GIF, WebM</h3><p>MP4 has sound and is the default. GIF is for loops and readmes. WebM is for web embeds.</p></div>
+        <div class="card coral"><div class="icon">📐</div><h3>Sizes</h3><p>YouTube 1920×1080, HD 1280×720, TikTok 1080×1920, square, portrait, cinema at 60 fps, and 4K.</p></div>
+        <div class="card lilac wide"><div class="icon">🚫</div><h3>What it cannot record</h3><p>Pages that need a click, typing or a login during the video (a single click at the start works with <code>--start</code>). Sound the page plays itself (use <code>--voice</code> or <code>--music</code>). Protected embeds such as YouTube or Netflix.</p></div>
+      </div>
+
+      <div class="split" style="margin-top:44px">
+        <div class="card sage">
+          <div class="icon">✅</div>
+          <h3>If your page already moves</h3>
+          <p>Record it for exactly the time you want.</p>
+          <pre>tockmux render landing.html --duration 20</pre>
+        </div>
+        <div class="card sky">
+          <div class="icon">🎨</div>
+          <h3>If your page is static</h3>
+          <p>A static page renders as a still image. Describe the look you want with <code>/tockmux:make</code>, and Claude writes an animated page to match.</p>
+          <pre>/tockmux:make a 20-second promo, warm colours, --duration 20</pre>
+        </div>
+      </div>
+      <p class="note" style="margin-top:18px">Not sure if your page moves? Run <code>tockmux check landing.html</code> first.</p>
+    </div>
+  </section>
+
+  <!-- AI and plugin -->
+  <section id="ai">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">For AI assistants</span>
+        <h2>Let your assistant make the video.</h2>
+        <p class="lede" style="margin-top:16px">TockMux includes an MCP server, so Claude Desktop, Claude Code, Cursor and other assistants can check a page, preview a frame and render the MP4, while you watch.</p>
+        <p style="margin-top:14px">It can only read and write inside the folder you start it in.</p>
+      </div>
+      <div class="code-block">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre><span style="color:var(--muted)"># Claude Code: add the MCP server</span>
+claude mcp add tockmux -- npx -y tockmux mcp
+
+<span style="color:var(--muted)"># Claude Code plugin: /tockmux commands</span>
+/plugin marketplace add Anand2k29/TockMux
+/plugin install tockmux@tockmux</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library -->
+  <section id="library">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">For developers</span>
+        <h2>Use it as a library.</h2>
+        <p class="lede" style="margin-top:16px">The engine behind the command line is one import away, so build scripts and apps can render videos too.</p>
+      </div>
+      <div class="code-block">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre>import { convert } from "tockmux";
 
 const result = await convert({
-  input: "my.html",
-  flags: { output: "my.mp4", preset: "tiktok" }
+  input: "promo.html",
+  flags: { output: "promo.mp4", preset: "tiktok" }
 });
 console.log(result.output, result.durationSec);</pre>
-
-    <h3 style="margin-top:44px;font-size:28px;text-transform:uppercase;font-family:var(--display);font-weight:400">Troubleshooting</h3>
-    <div class="grid" style="margin-top:18px">
-      <div class="card"><h3>"No browser found"</h3><p>Run <code>tockmux setup</code>, or install Chrome or Edge.</p></div>
-      <div class="card"><h3>The video is a still image</h3><p>The page does not move by itself. Run <code>tockmux check</code> to see why.</p></div>
-      <div class="card"><h3>The page waits for a click</h3><p>Add <code>--start "#your-button"</code>.</p></div>
-      <div class="card"><h3>Anything else</h3><p>Run again with <code>--debug</code> and send the output to Spidey_Moon on Discord.</p></div>
-    </div>
-    <p style="margin-top:28px">Every command and option is in the package: run <code>tockmux help</code>, or see the package page on <a href="https://www.npmjs.com/package/tockmux">npm</a>.</p>
-  </div>
-</section>
-
-<section id="limits">
-  <div class="wrap">
-    <span class="kicker">What you can make</span>
-    <h2>Files, lengths and limits.</h2>
-    <p class="lede">TockMux is precise about what it accepts. Here is the whole list, so you know before you start.</p>
-
-    <h3 style="margin-top:40px;font-size:24px">Files it accepts</h3>
-    <div class="table-wrap" style="margin-top:14px">
-      <table>
-        <thead><tr><th>File</th><th>What it is for</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td><code>.html</code>, <code>.htm</code></td><td>A page that moves by itself</td><td>The main input. CSS, JavaScript, canvas, SVG, GSAP and Lottie all work.</td></tr>
-          <tr><td><code>.tmx</code></td><td>A title film written as a short script</td><td>No HTML needed.</td></tr>
-          <tr><td><code>.mp4</code></td><td>An existing video, for <code>sync</code></td><td>Add a voice-over or music to it.</td></tr>
-          <tr><td><code>.mp3</code> and other audio</td><td>Voice-over or music</td><td>MP3 is the format that is tested.</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="note" style="margin-top:14px">Anything else, such as <code>.txt</code>, <code>.pdf</code>, <code>.docx</code>, or a lone <code>.png</code> or <code>.jpg</code>, is refused. Images and fonts a page uses are fine.</p>
-
-    <div class="grid" style="margin-top:44px">
-      <div class="card tint-sage"><h3>How long</h3><p>Up to <b>one hour</b> (3600 seconds). If you don't set a length, the video is 10 seconds. Set it with <code>--duration 20</code> or a meta tag in the page.</p></div>
-      <div class="card tint-lilac"><h3>Render time</h3><p>Longer films take longer. A 30-second 1280x720 film takes about 40 to 50 seconds on a normal computer. Test a short version first.</p></div>
-      <div class="card tint-slate"><h3>MP4, GIF, WebM</h3><p>MP4 carries sound and is the default. GIF is for short loops and readmes. WebM is for web embeds.</p></div>
-      <div class="card tint-mustard"><h3>Sizes</h3><p>YouTube 1920x1080, HD 1280x720, TikTok 1080x1920 vertical, square 1080x1080, portrait 1080x1350, cinema at 60 fps, and 4K.</p></div>
-    </div>
-
-    <h3 style="margin-top:44px;font-size:24px">What it cannot record</h3>
-    <div class="grid" style="margin-top:14px">
-      <div class="card"><h3>Pages that need you</h3><p>Pages that wait for a click, typing or a login during the video. A single click at the start works with <code>--start</code>.</p></div>
-      <div class="card"><h3>Sound the page plays</h3><p>Use <code>--voice</code> or <code>--music</code> to add audio instead.</p></div>
-      <div class="card"><h3>Protected embeds</h3><p>YouTube, Netflix and similar DRM players cannot be recorded.</p></div>
-    </div>
-
-    <h3 style="margin-top:44px;font-size:24px">From a landing page to a promo video</h3>
-    <div class="split" style="margin-top:14px">
-      <div class="card tint-rose"><h3>If your page already moves</h3><p>Record it for exactly the time you want:</p><pre class="code" style="box-shadow:none;font-size:15px">tockmux render landing.html --duration 20</pre><p class="note" style="margin-top:10px">Anything after 20 seconds is not recorded.</p></div>
-      <div class="card tint-sage"><h3>If your page is static</h3><p>A static page renders as a still image, so it needs an animation first. Describe the look you want with <code>/tockmux:make</code>, and Claude writes an animated page to match, then renders it.</p><pre class="code" style="box-shadow:none;font-size:15px">/tockmux:make a 20-second promo, warm colours, --duration 20</pre></div>
-    </div>
-    <p style="margin-top:24px">Not sure if your page moves? Run <code>tockmux check landing.html</code> first.</p>
-
-    <h3 style="margin-top:44px;font-size:24px">Works inside Claude Code</h3>
-    <pre class="code" style="margin-top:14px">/plugin marketplace add Anand2k29/TockMux
-/plugin install tockmux@tockmux</pre>
-    <p class="note" style="margin-top:10px">Then use <code>/tockmux:render</code>, <code>/tockmux:watch</code>, <code>/tockmux:check</code>, <code>/tockmux:make</code> and <code>/tockmux:setup</code>.</p>
-  </div>
-</section>
-
-<section id="faq">
-  <div class="wrap" style="max-width:820px">
-    <span class="kicker">FAQ</span>
-    <h2>Good questions.</h2>
-    <details open>
-      <summary>Can every HTML file become an MP4?</summary>
-      <p>Any page that plays by itself over time. Pages that wait for a click, a keypress or a login cannot be recorded without a person. TockMux checks this for you with <code>tockmux check</code>.</p>
-    </details>
-    <details>
-      <summary>Does it need the internet?</summary>
-      <p>Rendering runs on your computer. Only the ElevenLabs narration feature (optional) talks to an online service, using keys you own.</p>
-    </details>
-    <details>
-      <summary>Is it safe to run other people's HTML?</summary>
-      <p>Treat it like opening the file in a browser. Studio only listens on your own computer. If you ever host TockMux as a public service, run each job in an isolated container, because this package does not do that for you.</p>
-    </details>
-    <details>
-      <summary>Is it free?</summary>
-      <p>Yes. TockMux is MIT licensed. You need Node.js and a Chromium-based browser, which <code>tockmux setup</code> can download.</p>
-    </details>
-    <details>
-      <summary>Windows, macOS, Linux?</summary>
-      <p>All three are supported by the code. Windows is the platform the author uses daily; please report anything odd in an issue or on Discord.</p>
-    </details>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="wrap">
-    <span class="kicker">Talk to the author</span>
-    <h2>Say hello.</h2>
-    <p class="lede">Questions, bugs, ideas, or a video you made that you want to show off. Find me in any of these places.</p>
-    <div class="contact" style="margin-top:36px">
-      <div class="card tint-lilac">
-        <h3>Discord</h3>
-        <p class="handle">Spidey_Moon</p>
-        <p>Fastest way to reach me. Send a message with your question and the file you are working on.</p>
-      </div>
-      <div class="card tint-sage">
-        <h3>GitHub</h3>
-        <p class="handle"><a href="https://github.com/Anand2k29">Anand2k29</a></p>
-        <p>Report issues, suggest features and follow the code.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap" style="max-width:860px">
+      <div class="section-head" style="margin-bottom:32px">
+        <span class="eyebrow">FAQ</span>
+        <h2>Good questions.</h2>
+      </div>
+      <div class="faq">
+        <details open>
+          <summary>Can every HTML file become an MP4?</summary>
+          <p>Any page that plays by itself over time. Pages that wait for a click, a keypress or a login cannot be recorded without a person. <code>tockmux check</code> tells you which kind yours is.</p>
+        </details>
+        <details>
+          <summary>Does it need the internet?</summary>
+          <p>Rendering runs on your computer. Only the optional ElevenLabs narration talks to an online service, using keys you own.</p>
+        </details>
+        <details>
+          <summary>Is it safe to run other people's HTML?</summary>
+          <p>Treat it like opening the file in a browser. Studio listens only on your own computer. If you host TockMux as a public service, run each job in an isolated container.</p>
+        </details>
+        <details>
+          <summary>Is it free?</summary>
+          <p>Yes. TockMux is MIT licensed. You need Node.js and a Chromium-based browser, which <code>tockmux setup</code> can download.</p>
+        </details>
+        <details>
+          <summary>Windows, macOS, Linux?</summary>
+          <p>Windows is tested on every change. macOS testing is in progress, and Linux has not been tested yet. Help with either is welcome: see <a href="https://github.com/Anand2k29/TockMux/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Talk to the author</span>
+        <h2>Say hello.</h2>
+        <p class="lede">Questions, bugs, ideas, or a video you made that you want to show off.</p>
+      </div>
+      <div class="contact">
+        <div class="card sky">
+          <div class="icon">💬</div>
+          <h3>Discord</h3>
+          <p class="handle">Spidey_Moon</p>
+          <p style="margin-top:8px">Fastest way to reach me. Send your question and the file you are working on.</p>
+        </div>
+        <a class="card sage" href="https://github.com/Anand2k29">
+          <div class="icon">🐙</div>
+          <h3>GitHub</h3>
+          <p class="handle">Anand2k29</p>
+          <p style="margin-top:8px">Report issues, suggest features, and follow the code.</p>
+        </a>
+      </div>
+    </div>
+  </section>
 
 </main>
 
 <footer>
   <div class="wrap">
-    <span><b>TockMux 4.0.0</b> · MIT licence · built by Spidey_Moon (Discord) · Anand2k29 (GitHub)</span>
-    <span><a href="#start">Get started</a> · <a href="#top">Back to top</a></span>
+    <span><b style="color:var(--text)">TockMux 4.0.1</b> · MIT licence · built by Spidey_Moon (Discord) and Anand2k29 (GitHub)</span>
+    <span><a href="#top">Back to top</a> · <a href="https://www.npmjs.com/package/tockmux">npm</a> · <a href="https://github.com/Anand2k29/TockMux">GitHub</a></span>
   </div>
 </footer>
 
@@ -591,15 +591,18 @@ console.log(result.output, result.durationSec);</pre>
     if (!btn || !cmd) return;
     btn.addEventListener("click", function () {
       var text = cmd.textContent.trim();
-      var done = function () { btn.textContent = "COPIED"; setTimeout(function () { btn.textContent = "COPY"; }, 1600); };
+      var reset = function (label) {
+        btn.textContent = label;
+        setTimeout(function () { btn.textContent = "Copy"; }, 1600);
+      };
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(done, function () { btn.textContent = "SELECT"; });
+          navigator.clipboard.writeText(text).then(function () { reset("Copied"); }, function () { reset("Select"); });
         } else {
-          btn.textContent = "SELECT";
+          reset("Select");
         }
       } catch (e) {
-        btn.textContent = "SELECT";
+        reset("Select");
       }
     });
   })();
