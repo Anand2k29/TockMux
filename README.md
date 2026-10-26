@@ -42,9 +42,11 @@ Typing `tockmux` on its own opens a numbered menu. You do not need to learn any 
 10. [Use it from code](#use-it-from-code)
 11. [What the documents are](#what-the-documents-are)
 12. [How it works](#how-it-works)
-13. [Troubleshooting](#troubleshooting)
-14. [Contributing](#contributing)
-15. [Licence and contact](#licence-and-contact)
+13. [What you can make, and the limits](#what-you-can-make-and-the-limits)
+14. [Claude Code plugin](#claude-code-plugin)
+15. [Troubleshooting](#troubleshooting)
+16. [Contributing](#contributing)
+17. [Licence and contact](#licence-and-contact)
 
 ---
 
@@ -392,6 +394,87 @@ every time.
 For a step-by-step explanation of the code, read [`process/flow.md`](process/flow.md) and [`process/functions.mvp`](process/functions.mvp).
 
 ---
+
+## What you can make, and the limits
+
+### Files TockMux accepts
+
+| File | What it is for | Notes |
+| --- | --- | --- |
+| `.html`, `.htm` | A page that moves by itself | The main input. CSS, JavaScript, canvas, SVG, GSAP and Lottie all work. |
+| `.tmx` | A title film written as a short script | No HTML needed. See [Title films](#title-films-with-tmx). |
+| `.mp4` | An existing video, for `sync` | Add a voice-over or music to it. |
+| `.mp3` (and other audio) | Voice-over or music, for `--voice` and `--music` | MP3 is the format that is tested. |
+
+Anything else, such as `.txt`, `.pdf`, `.docx`, `.png` or `.jpg` on its own, is refused with "Unsupported file type".
+Images and fonts that a page uses are fine, as long as the page can reach them.
+
+### How long a video can be
+
+- **Maximum:** 3600 seconds (one hour).
+- **Default:** 10 seconds, if the page doesn't declare a length and you don't pass `--duration`.
+- **Setting the length:** use `--duration 20` (or `20s`, or `1:30`), or add `<meta name="html2mp4:duration" content="20">` to the page.
+- **Render time** grows with length. On a normal computer, a 30-second 1280x720 film takes about 40 to 50 seconds with `--fast`. Test a short version before a long one.
+- **Frame limits:** width and height from 16 to 7680 pixels, frame rate from 1 to 120 fps.
+
+### What kinds of video you can make
+
+| Output | Audio | Use it for |
+| --- | --- | --- |
+| MP4 (default) | Yes | Social posts, presentations, promo films, anything you upload |
+| GIF | No | Readme previews, chat and short loops |
+| WebM | No | Web embeds |
+
+Sizes come from presets: `youtube` (1920x1080), `hd720` (1280x720), `tiktok` (1080x1920 vertical), `square` (1080x1080),
+`portrait` (1080x1350), `cinema` (1920x1080 at 60 fps) and `4k` (3840x2160). See [Every command](#every-command).
+
+Typical videos: promo films, animated explainers, social clips, slide-style animations, short GIFs for readmes and
+title films. You can also save a single frame as a poster image with `tockmux frame`.
+
+### What it cannot record
+
+- Pages that need a click, typing or a login during the video. A single click at the start works with `--start "#button"`.
+- Sound that the page plays itself. Use `--voice` or `--music` instead.
+- Protected embeds such as YouTube or Netflix.
+
+### Turning a landing page into a promo video
+
+There are two cases.
+
+1. **The page already moves.** Render it with a length:
+
+   ```bash
+   npx -y tockmux render landing.html --duration 20
+   ```
+
+   Or, in Claude Code with the plugin, run `/tockmux:render landing.html --duration 20`. The video records exactly
+   20 seconds. Anything after that is not recorded.
+
+2. **The page is static.** The render would be a still image, so the page needs an animation first. Describe the look
+   you want with `/tockmux:make`, for example `/tockmux:make a 20-second promo in the style of landing.html, warm colours, --duration 20`.
+   Claude writes a new animated page to match, and TockMux renders it. Claude does not read `landing.html` as a source
+   yet, so describe the look you want.
+
+Run `npx -y tockmux check landing.html` first. It tells you whether the page moves before you wait for a render.
+
+## Claude Code plugin
+
+TockMux also works inside Claude Code, with `/tockmux` commands. Install it with two commands:
+
+```
+/plugin marketplace add Anand2k29/TockMux
+/plugin install tockmux@tockmux
+```
+
+| Command | What it does |
+| --- | --- |
+| `/tockmux:render <file>` | Renders an HTML or `.tmx` file to MP4, GIF or WebM |
+| `/tockmux:watch <file>` | Re-renders every time you save |
+| `/tockmux:check <file>` | Checks whether the file will convert well |
+| `/tockmux:make <description>` | Writes an animated page from your description, then renders it |
+| `/tockmux:setup` | Checks your setup and runs the demo |
+
+Full details are in [`claude-plugin/README.md`](claude-plugin/README.md).
 
 ## Troubleshooting
 
