@@ -84,14 +84,6 @@ tockmux demo
 
 **4.** Open the menu, or check your setup:
 
-<div align="center">
-
-<img src="promo/demo-terminal.gif" alt="Demo: running tockmux render and tockmux watch in a terminal" width="640">
-
-**[▶ Watch the terminal demo (14 s, MP4)](https://github.com/Anand2k29/TockMux/blob/main/promo/demo-terminal.mp4)**
-
-</div>
-
 
 ```bash
 tockmux          # the numbered menu
@@ -103,6 +95,18 @@ tockmux doctor   # checks Node, FFmpeg and the browser, and says what to fix
 > blocks writing there, so TockMux saves to your home folder instead.
 
 ---
+
+### 🎥 See it run in a terminal
+
+<div align="center">
+
+<img src="promo/demo-recording.gif" alt="Recording of a real terminal: tockmux render makes the video, then tockmux watch renders again after a save" width="640">
+
+**[▶ Watch the full recording (MP4, 53 s)](https://github.com/Anand2k29/TockMux/blob/main/promo/demo-recording.mp4)**
+
+*A recording of real output from two runs of the commands above, not a mock-up.*
+
+</div>
 
 ## 🧭 The numbered menu
 

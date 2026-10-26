@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TockMux terminal recording</title>
+<meta name="html2mp4:duration" content="53">
+<meta name="html2mp4:width" content="1280">
+<meta name="html2mp4:height" content="720">
+<style>
+  :root { --paper:#F4EFE3; --ink:#161514; --mustard:#E3B95C; --rose:#E59A8A; --sage:#A9C5A0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--paper); font-family: Arial, sans-serif; }
+  .bar { position: absolute; left: 0; right: 0; top: 0; height: 48px; background: var(--ink); display: flex; align-items: center; gap: 10px; padding: 0 22px; }
+  .bar i { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--paper); display: inline-block; }
+  .bar i:nth-child(1) { background: var(--rose); }
+  .bar i:nth-child(2) { background: var(--mustard); }
+  .bar i:nth-child(3) { background: var(--sage); }
+  .bar span { color: var(--paper); font: 700 15px "Courier New", monospace; margin-left: 16px; opacity: .75; }
+  .term { position: absolute; left: 56px; top: 80px; width: 1168px; height: 560px; background: #0E0D0C; border: 3px solid var(--ink); box-shadow: 12px 12px 0 var(--mustard); overflow: hidden; padding: 18px 24px; }
+  .screen { font: 18px/1.42 "Courier New", Consolas, monospace; color: #E9E4D6; white-space: pre; will-change: transform; }
+  .fg30 { color: #5A5650; } .fg31 { color: #E59A8A; } .fg32 { color: #A9C5A0; } .fg33 { color: #E3B95C; }
+  .fg34 { color: #9DB2CC; } .fg35 { color: #C9BEDD; } .fg36 { color: #9DB2CC; } .fg37 { color: #F4EFE3; }
+  .fg90 { color: #8A8478; } .fg91 { color: #F0B3A6; } .fg92 { color: #C4DCC0; } .fg93 { color: #F2D38A; }
+  .fg94 { color: #BCD0E4; } .fg95 { color: #DDD4EE; } .fg96 { color: #BCD0E4; } .fg97 { color: #FFFDF7; }
+  .b { font-weight: 700; }
+  .label { position: absolute; left: 56px; bottom: 22px; font: 700 17px Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+  .note { position: absolute; right: 56px; bottom: 22px; font: 600 15px "Courier New", monospace; color: #6E685C; }
+</style>
+</head>
+<body>
+<div class="bar"><i></i><i></i><i></i><span>terminal · recorded from tockmux 4.0.1</span></div>
+<div class="term"><div class="screen" id="screen"></div></div>
+<div class="label">Real terminal output · render, then watch</div>
+<div class="note" id="clock">0.0 s</div>
+<script>
+const CHUNKS = [{"t":0,"text":"\u001b[1;32m$\u001b[0m tockmux render landing.html\r\n"},{"t":0.257,"text":"  \u001b[38;5;141mT\u001b[39;22m\u001b[38;5;140mo\u001b[39;22m\u001b[38;5;176mc\u001b[39;22m\u001b[38;5;211mk\u001b[39;22m\u001b[38;5;217mM\u001b[39;22m\u001b[38;5;216mu\u001b[39;22m\u001b[38;5;222mx\u001b[39;22m \u001b[2mv4.0.1\u001b[22m  \u001b[38;5;145mHTML to MP4, frame-perfect\u001b[39;22m\n"},{"t":0.257,"text":"\n"},{"t":0.993,"text":"  > Reading landing.html...\n"},{"t":1.002,"text":"  \u001b[38;5;79m+\u001b[39;22m Read \u001b[1mlanding.html\u001b[22m \u001b[38;5;145m(HTML page)\u001b[39;22m\n"},{"t":1.002,"text":"  \u001b[38;5;145mOutput\u001b[39;22m  \u001b[1mlanding.mp4\u001b[22m\n"},{"t":1.003,"text":"  \u001b[38;5;145mSize  \u001b[39;22m  1280x720 at 30 fps\n  \u001b[38;5;145mLength\u001b[39;22m  6s \u001b[38;5;145m(set by you)\u001b[39;22m, 180 frames\n  \u001b[38;5;145mFormat\u001b[39;22m  MP4\n\n"},{"t":1.03,"text":"  \u001b[38;5;145mLaunching browser (1 worker)\u001b[39;22m\n"},{"t":9.576,"text":"  Rendering 24%  (44/180 frames)\n"},{"t":11.967,"text":"  Rendering 50%  (90/180 frames)\n"},{"t":18.436,"text":"  Rendering 75%  (135/180 frames)\n"},{"t":22.181,"text":"  Rendering 100%  (180/180 frames)\n"},{"t":24.04,"text":"\n"},{"t":24.04,"text":"  \u001b[38;5;79m+-----------------------------------------+\u001b[39;22m\n"},{"t":24.04,"text":"  \u001b[38;5;79m|\u001b[39;22m  \u001b[38;5;79m+\u001b[39;22m \u001b[1mVideo ready\u001b[22m                          \u001b[38;5;79m|\u001b[39;22m\n  \u001b[38;5;79m|\u001b[39;22m  \u001b[1mlanding.mp4\u001b[22m                            \u001b[38;5;79m|\u001b[39;22m\n  \u001b[38;5;79m|\u001b[39;22m  1280x720  -  30 fps  -  6s  -  1.5 MB  \u001b[38;5;79m|\u001b[39;22m\n  \u001b[38;5;79m|\u001b[39;22m  \u001b[38;5;145mrendered in 21.37s\u001b[39;22m                     \u001b[38;5;79m|\u001b[39;22m\n  \u001b[38;5;79m+-----------------------------------------+\u001b[39;22m\n"},{"t":24.04,"text":"\n  \u001b[38;5;145mNext: add a narration with  --voice narration.mp3 --auto-fit\u001b[39;22m\n\n"},{"t":24.689,"text":"\r\n\u001b[1;32m$\u001b[0m tockmux watch landing.html\r\n"},{"t":24.235,"text":"  \u001b[38;5;141mT\u001b[39;22m\u001b[38;5;140mo\u001b[39;22m\u001b[38;5;176mc\u001b[39;22m\u001b[38;5;211mk\u001b[39;22m\u001b[38;5;217mM\u001b[39;22m\u001b[38;5;216mu\u001b[39;22m\u001b[38;5;222mx\u001b[39;22m \u001b[2mv4.0.1\u001b[22m  \u001b[38;5;145mHTML to MP4, frame-perfect\u001b[39;22m\n"},{"t":24.235,"text":"\n"},{"t":24.746,"text":"  \u001b[38;5;141m>\u001b[39;22m Watching \u001b[1mlanding.html\u001b[22m  \u001b[38;5;145msave the file to render, Ctrl+C to stop\u001b[39;22m\n\n"},{"t":24.865,"text":"  \u001b[38;5;145m[2:30:05 am] render #1 started\u001b[39;22m\n"},{"t":38.757,"text":"  \u001b[38;5;79m+\u001b[39;22m landing.mp4 \u001b[38;5;145m- 6s video - rendered in 14.0s\u001b[39;22m\n"},{"t":38.757,"text":"  \u001b[38;5;145m[2:30:19 am] render #2 started\u001b[39;22m\n"}];
+</script>
+<script>
+// Replays recorded terminal output at its original timing.
+// CHUNKS is inserted by build-recording.mjs: real output from real runs, with real seconds.
+const LINE_H = 18 * 1.42;
+const VISIBLE = Math.floor((560 - 36) / LINE_H);
+const SGR_FG = { 30: "fg30", 31: "fg31", 32: "fg32", 33: "fg33", 34: "fg34", 35: "fg35", 36: "fg36", 37: "fg37",
+  90: "fg90", 91: "fg91", 92: "fg92", 93: "fg93", 94: "fg94", 95: "fg95", 96: "fg96", 97: "fg97" };
+
+// A small terminal model: rows of cells, carriage return, newline, erase line, and colour codes.
+let rows = [[]];
+let row = 0;
+let col = 0;
+let cls = "";
+let next = 0;
+
+function put(ch) {
+  const r = rows[row] || (rows[row] = []);
+  while (r.length < col) r.push({ c: " ", k: "" });
+  r[col] = { c: ch, k: cls };
+  col++;
+}
+
+function fgClasses(list) {
+  return list.filter(function (x) { return x.indexOf("fg") !== 0 && x.indexOf("c:") !== 0; });
+}
+
+function sgr(params) {
+  const codes = params === "" ? [0] : params.split(";").map(Number);
+  for (let i = 0; i < codes.length; i++) {
+    const n = codes[i];
+    if (n === 38 && codes[i + 1] === 2) {
+      // 24-bit colour: ESC[38;2;r;g;bm
+      const parts = fgClasses(cls.split(" ").filter(Boolean));
+      parts.push("c:" + codes[i + 2] + "," + codes[i + 3] + "," + codes[i + 4]);
+      cls = parts.join(" ");
+      i += 4;
+    } else if (n === 0) {
+      cls = "";
+    } else if (n === 1) {
+      const parts = cls.split(" ").filter(function (x) { return x && x !== "b"; });
+      parts.push("b");
+      cls = parts.join(" ");
+    } else if (SGR_FG[n]) {
+      const parts = fgClasses(cls.split(" ").filter(Boolean));
+      parts.push(SGR_FG[n]);
+      cls = parts.join(" ");
+    } else if (n === 22) {
+      cls = cls.split(" ").filter(function (x) { return x && x !== "b"; }).join(" ");
+    } else if (n === 39) {
+      cls = fgClasses(cls.split(" ").filter(Boolean)).join(" ");
+    }
+  }
+}
+
+function feed(s) {
+  for (let i = 0; i < s.length; i++) {
+    const ch = s.charAt(i);
+    if (ch === "\u001b" && s.charAt(i + 1) === "[") {
+      let j = i + 2;
+      let p = "";
+      while (j < s.length && !/[A-Za-z]/.test(s.charAt(j))) { p += s.charAt(j); j++; }
+      const end = s.charAt(j);
+      if (end === "m") sgr(p.split("?").join(""));
+      else if (end === "K") { const r = rows[row] || (rows[row] = []); r.length = Math.min(r.length, col); }
+      i = j;
+    } else if (ch === "\r") {
+      col = 0;
+    } else if (ch === "\n") {
+      row++;
+      col = 0;
+      rows[row] = rows[row] || [];
+    } else if (ch === "\u001b") {
+      // other escape codes are ignored
+    } else {
+      put(ch);
+    }
+  }
+}
+
+function esc(t) { return t.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;"); }
+
+// Turns a cell's class string into a span, with inline colour for 24-bit colours.
+function spanFor(k, text) {
+  const tokens = k.split(" ").filter(Boolean);
+  const colour = tokens.filter(function (x) { return x.indexOf("c:") === 0; })[0];
+  const names = tokens.filter(function (x) { return x.indexOf("c:") !== 0; }).join(" ");
+  const style = colour ? ' style="color:rgb(' + colour.slice(2) + ')"' : "";
+  return '<span class="' + names + '"' + style + ">" + esc(text) + "</span>";
+}
+
+function html() {
+  return rows.map(function (r) {
+    let out = "";
+    let last = null;
+    let buf = "";
+    const flush = function () {
+      if (buf) out += last ? spanFor(last, buf) : esc(buf);
+      buf = "";
+    };
+    for (const cell of r) {
+      if (cell.k !== last) { flush(); last = cell.k; }
+      buf += cell.c;
+    }
+    flush();
+    return out;
+  }).join("\n");
+}
+
+const screen = document.getElementById("screen");
+const clock = document.getElementById("clock");
+let t0 = null;
+
+function frame(t) {
+  while (next < CHUNKS.length && CHUNKS[next].t <= t) { feed(CHUNKS[next].text); next++; }
+  screen.innerHTML = html();
+  const shift = Math.max(0, rows.length - VISIBLE) * LINE_H;
+  screen.style.transform = "translateY(" + (-shift) + "px)";
+  clock.textContent = t.toFixed(1) + " s";
+}
+
+function loop(now) {
+  if (t0 === null) t0 = now;
+  frame((now - t0) / 1000);
+  requestAnimationFrame(loop);
+}
+
+frame(0);
+requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>
