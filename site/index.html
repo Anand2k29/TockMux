@@ -186,6 +186,9 @@
   .panel pre { margin: 0; padding: 20px; font-size: 14px; line-height: 1.75; overflow-x: auto; }
   .panel .c { color: var(--sage); }
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .split > * { min-width: 0; }
+  .panel { max-width: 100%; }
+  .frame-card pre, .panel pre { max-width: 100%; }
   @media (max-width: 860px) { .split { grid-template-columns: 1fr; gap: 36px; } }
 
   /* ---------- limits list ---------- */
