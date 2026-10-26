@@ -225,6 +225,7 @@
     <nav class="links" aria-label="Sections">
       <a href="#why">Why</a>
       <a href="#features">Features</a>
+      <a href="#demos">Demos</a>
       <a href="#start">Start</a>
       <a href="#limits">Limits</a>
       <a href="#ai">AI</a>
@@ -441,6 +442,48 @@ claude mcp add tockmux -- npx -y tockmux mcp
 /plugin marketplace add Anand2k29/TockMux
 /plugin install tockmux@tockmux</pre>
       </div>
+    </div>
+  </section>
+
+  <section id="demos">
+    <div class="wrap">
+      <div class="head">
+        <span class="timecode"><b>00:00:06</b><br>demos</span>
+        <div>
+          <span class="tag">In the terminal and as an MCP</span>
+          <h2 style="margin-top:20px">Two ways to run it.</h2>
+          <p class="lede">Here is the same render, first from your terminal and then from an AI assistant. Both are short animated demos of the exact commands and tool calls, not screen recordings.</p>
+        </div>
+      </div>
+      <div class="frames">
+        <div class="frame-card wide paper" data-tilt>
+          <div class="no"><span><b>D1</b></span><span>terminal</span></div>
+          <h3>Run it from the terminal</h3>
+          <p>One command renders the film. Save the file and <code>tockmux watch</code> renders again on every save.</p>
+          <video controls preload="metadata" playsinline style="width:100%;margin-top:18px;border:2px solid var(--ink);background:#000" aria-label="Terminal demo: render and watch">
+            <source src="demo-terminal.mp4" type="video/mp4">
+            <a href="demo-terminal.mp4">Download the terminal demo (MP4)</a>
+          </video>
+        </div>
+        <div class="frame-card wide sage" data-tilt>
+          <div class="no"><span><b>D2</b></span><span>mcp</span></div>
+          <h3>Use it as an MCP tool</h3>
+          <p>Ask Claude in plain words. It calls the <code>render_video</code> tool, TockMux renders the file on your computer, and Claude reports the result.</p>
+          <video controls preload="metadata" playsinline style="width:100%;margin-top:18px;border:2px solid var(--ink);background:#000" aria-label="MCP demo: a plain request becomes a rendered video">
+            <source src="demo-mcp.mp4" type="video/mp4">
+            <a href="demo-mcp.mp4">Download the MCP demo (MP4)</a>
+          </video>
+        </div>
+        <div class="frame-card lilac wide" data-tilt>
+          <div class="no"><span><b>D3</b></span><span>setup once</span></div>
+          <h3>Connect TockMux to your assistant</h3>
+          <p>Add the server once, then ask in plain words. It works in Claude Code, Claude Desktop, Cursor and any MCP client.</p>
+          <pre>claude mcp add tockmux -- npx -y tockmux mcp     # Claude Code
+tockmux mcp --print-config                       # JSON for Claude Desktop or Cursor</pre>
+          <p style="margin-top:14px">The assistant can only read and write inside the folder you start it in. Its seven tools are <code>check_html</code>, <code>snapshot_frame</code>, <code>render_video</code>, <code>compile_tmx</code>, <code>list_presets</code>, <code>probe_media</code> and <code>speak_text</code>.</p>
+        </div>
+      </div>
+      <p class="fine" style="margin-top:20px">Demos are rendered by TockMux from HTML, so you can see the exact frames. Sound is not included.</p>
     </div>
   </section>
 

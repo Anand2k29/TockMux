@@ -84,6 +84,15 @@ tockmux demo
 
 **4.** Open the menu, or check your setup:
 
+<div align="center">
+
+<img src="promo/demo-terminal.gif" alt="Demo: running tockmux render and tockmux watch in a terminal" width="640">
+
+**[▶ Watch the terminal demo (14 s, MP4)](https://github.com/Anand2k29/TockMux/blob/main/promo/demo-terminal.mp4)**
+
+</div>
+
+
 ```bash
 tockmux          # the numbered menu
 tockmux doctor   # checks Node, FFmpeg and the browser, and says what to fix
@@ -341,6 +350,17 @@ Mistakes are reported with the line number and a suggestion. Start from a sample
 
 MCP (Model Context Protocol) is a standard way for AI tools to use other tools. TockMux can run as an MCP server, so an
 assistant can make videos when you ask in plain words.
+
+<div align="center">
+
+<img src="promo/demo-mcp.gif" alt="Demo: a plain request in Claude becomes a rendered video through TockMux's render_video tool" width="640">
+
+**[▶ Watch the MCP demo (10 s, MP4)](https://github.com/Anand2k29/TockMux/blob/main/promo/demo-mcp.mp4)**
+
+</div>
+
+> [!NOTE]
+> The demo is an animated illustration of the exact tool call and result, rendered by TockMux from HTML.
 
 ```bash
 claude mcp add tockmux -- npx -y tockmux mcp     # Claude Code
