@@ -11,6 +11,7 @@ jobs:
         os: [windows-latest, macos-latest]
         node: [20, 22]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,3 +19,4 @@ jobs:
       - run: npm install
       - run: npx playwright-core install --with-deps chromium
       - run: npm test
+        timeout-minutes: 20
