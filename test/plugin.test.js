@@ -27,7 +27,8 @@ describe("Claude Code plugin", () => {
     for (const name of COMMANDS) {
       const file = path.join(PLUGIN, "commands", `${name}.md`);
       assert.ok(fs.existsSync(file), `${name}.md exists`);
-      const text = fs.readFileSync(file, "utf8");
+      // Windows checkouts use CRLF line endings, so normalise them before matching.
+      const text = fs.readFileSync(file, "utf8").split("\r\n").join("\n");
       const front = text.match(/^---\n([\s\S]*?)\n---\n/);
       assert.ok(front, `${name}.md has front matter`);
       assert.match(front[1], /^description: .+/m, `${name} has a description`);
